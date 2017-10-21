@@ -1,26 +1,44 @@
 from datetime import datetime
 from time import sleep
 
+import itertools
+
 from config import *
 from game_controller import GameController
 from random_agent import RandomAgent
 from vm_host import VmHost
 
+import logging
+logging.basicConfig(format='%(asctime)s %(message)s', datefmt='%H:%M:%S',  level=logging.DEBUG)
+
+class GameplayJob:
+    def __init__(self, environment, controller, player, log_id=None):
+        self.environment = environment
+        self.controller = controller
+        self.player = player
+        if log_id is None:
+            self.log_id = ""
+        else:
+            self.log_id = "GP_JOB:" + str(log_id)
+
+    def run(self):
+        try:
+            self.environment.start()
+            for i in itertools.count():
+                state, score, screen = self.controller.get_game_state()
+                logging.info(self.log_id + " Iter: %d, State: %s, Score: %d", i, state, score)
+                if(state == "FINISHED"):
+                    break
+                else:
+                    inputs = player.react_to_new_game_screen(screen)
+                    self.controller.set_active_keys(inputs)
+                    sleep(0.1)
+        finally:
+            self.environment.stop()
+
 game_vm = VmHost(MARIO_VM_CONFIG)
 controller = GameController(game_vm, MARIO_VM_SCORE_RECT, ['A', 'LEFT', 'RIGHT'])
 player = RandomAgent(3)
 
-try:
-    while True:
-        state, score, screen = controller.get_game_state()
-        if(state == "FINISHED"):
-            print(datetime.now().time(), " --- Game finished!")
-            break
-        else:
-            print(datetime.now().time(), " --- State:", state, " Score: ", score, end=' --- REACTION: ')
-            inputs = player.react_to_new_game_screen(screen)
-            controller.set_active_keys(inputs)
-            sleep(0.1)
-finally:
-    game_vm.stop()
-
+job = GameplayJob(game_vm, controller, player, "12")
+job.run()

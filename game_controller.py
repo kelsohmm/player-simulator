@@ -71,7 +71,6 @@ class GameController:
         for i in range(len(key_activity_array)):
             if key_activity_array[i] == 1 or key_activity_array[i] == True:
                 active_keys.append(self.key_activity_mapping[i])
-        print("ACTIVE_KEYS: ", active_keys)
         return active_keys
 
     def get_score(self, screen_shot):

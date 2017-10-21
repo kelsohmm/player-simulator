@@ -118,21 +118,21 @@ class VmHost:
 
     def __init__(self, vm_config):
         vm_name, snap_name, window_rect = vm_config
-        print("VM host initialization started, name: ", vm_name, ", snapshot: ", snap_name)
         vbox = VirtualBox()
         self.session = Session()
         self.machine = vbox.find_machine(vm_name)
         self.window_rect = window_rect
+        self.snap_name = snap_name
 
-        self._set_snapshot(snap_name)
+
+    def start(self):
+        self._set_snapshot()
         self._launch_vm()
-        print("VM host started and operational.")
 
-    def _set_snapshot(self, snap_name):
-        print("Restoring snapshot.")
+    def _set_snapshot(self):
         self.machine.lock_machine(self.session, LockType.write)
         assert (self.session.type_p == SessionType.write_lock)
-        progress = self.session.machine.restore_snapshot(self.machine.find_snapshot(snap_name))
+        progress = self.session.machine.restore_snapshot(self.machine.find_snapshot(self.snap_name))
 
         progress.wait_for_completion(self._SNAP_RESTORE_TIMEOUT)
         if not progress.completed:
@@ -142,7 +142,7 @@ class VmHost:
 
     def _launch_vm(self):
         print("Launching VM process.")
-        progress = self.machine.launch_vm_process(self.session, 'gui', '')
+        progress = self.machine.launch_vm_process(self.session, type_p='headless')
         progress.wait_for_completion(self._VM_STARTUP_TIMEOUT)
         if not progress.completed:
             raise TimeoutError
