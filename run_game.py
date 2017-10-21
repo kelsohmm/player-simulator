@@ -23,7 +23,7 @@ class GameplayJob:
 
     def run(self):
         try:
-            self.environment.start()
+            self._start_environment()
             for i in itertools.count():
                 state, score, screen = self.controller.get_game_state()
                 logging.info(self.log_id + " Iter: %d, State: %s, Score: %d", i, state, score)
@@ -34,9 +34,18 @@ class GameplayJob:
                     self.controller.set_active_keys(inputs)
                     sleep(0.1)
         finally:
-            self.environment.stop()
+            self._stop_environment()
 
-game_vm = VmHost(MARIO_VM_CONFIG)
+    def _stop_environment(self):
+        logging.info(self.log_id + "Stopping game environment")
+        self.environment.stop()
+
+    def _start_environment(self):
+        logging.info(self.log_id + "Starting game environment")
+        self.environment.start()
+        logging.info(self.log_id + "Game environment up and running")
+
+game_vm = VmHost(MARIO_VM_CONFIG, mode='gui')
 controller = GameController(game_vm, MARIO_VM_SCORE_RECT, ['A', 'LEFT', 'RIGHT'])
 player = RandomAgent(3)
 

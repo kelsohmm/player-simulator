@@ -1,3 +1,4 @@
+import logging
 import pytesseract
 from PIL import Image
 from scipy import misc
@@ -27,6 +28,7 @@ class GameController:
     END_GAME_PIC_PATH = "mario_end.jpg"
     THUMBNAIL_SIZE = (128, 128)
     SIMILIARITY_TRESHOLD = 0.9
+    MAX_SCORE_JUMP = 2000
 
     def __init__(self, vm_host, score_rect, key_activity_array):
         self.host = vm_host
@@ -38,11 +40,12 @@ class GameController:
 
     def get_game_state(self):
         screen_shot = self.host.take_screen_shot()
+        score = self._get_score(screen_shot)
 
         if self._is_end_game_screen(screen_shot):
-            return "FINISHED", self.last_score, None
+            return "FINISHED", score, None
         else:
-            return "IN_PROGRESS", self.get_score(screen_shot), screen_shot
+            return "IN_PROGRESS", score, screen_shot
 
     def set_active_keys(self, key_activity_array):
         active_keys = self._map_key_activity_array_to_keys(key_activity_array)
@@ -73,14 +76,28 @@ class GameController:
                 active_keys.append(self.key_activity_mapping[i])
         return active_keys
 
-    def get_score(self, screen_shot):
+    def _get_score(self, screen_shot):
         x_left, y_top, x_right, y_bottom = self.score_rect
         score_screen = screen_shot[y_top:y_bottom, x_left:x_right, :]
+        score_digits = self._read_digits_from_screen(score_screen)
+        return self._convert_to_score_with_checks(score_digits)
+
+    def _convert_to_score_with_checks(self, score_digits):
+        try:
+            new_score = int(score_digits)
+            if new_score >= self.last_score \
+                    and new_score - self.last_score < self.MAX_SCORE_JUMP:  # TODO: kontrola zaufania wyniku, np 3 klatki w przod podobny zamiast jump
+                self.last_score = new_score
+            else:
+                logging.warning('Discarding new score, value: %d', new_score)
+        finally:
+            return self.last_score
+
+    def _read_digits_from_screen(self, score_screen):
         score_bw = cv2.cvtColor(score_screen, cv2.COLOR_RGB2GRAY)
         (thresh, score_tresh) = cv2.threshold(score_bw, 10, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)
         score_img = Image.fromarray(score_tresh)
         score_img.save("score.png")
         score_text = pytesseract.image_to_string(score_img, config="--psm 7")
         score_digits = ''.join(i for i in score_text if i.isdigit())
-
-        return int(score_digits)  # add exception handling
+        return score_digits

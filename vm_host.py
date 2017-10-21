@@ -116,13 +116,14 @@ class VmHost:
     _VM_STARTUP_TIMEOUT = 60 * 1000
     _GUEST_SESSION_NAME = '__GUEST_SESSION__'
 
-    def __init__(self, vm_config):
+    def __init__(self, vm_config, mode='gui'):
         vm_name, snap_name, window_rect = vm_config
         vbox = VirtualBox()
         self.session = Session()
         self.machine = vbox.find_machine(vm_name)
         self.window_rect = window_rect
         self.snap_name = snap_name
+        self.mode = mode
 
 
     def start(self):
@@ -141,14 +142,12 @@ class VmHost:
         self.session.unlock_machine()
 
     def _launch_vm(self):
-        print("Launching VM process.")
-        progress = self.machine.launch_vm_process(self.session, type_p='headless')
+        progress = self.machine.launch_vm_process(self.session, type_p=self.mode)
         progress.wait_for_completion(self._VM_STARTUP_TIMEOUT)
         if not progress.completed:
             raise TimeoutError
 
     def stop(self):
-        print("VM host stopped - shutting down.")
         self.session.console.power_down()
 
     def take_screen_shot(self):
