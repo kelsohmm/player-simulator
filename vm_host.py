@@ -148,7 +148,8 @@ class VmHost:
             raise TimeoutError
 
     def stop(self):
-        self.session.console.power_down()
+        progress = self.session.console.power_down()
+        progress.wait_for_completion(-1)
 
     def take_screen_shot(self):
         display = self.session.console.display

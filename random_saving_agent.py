@@ -1,5 +1,7 @@
 import random
 
+from image_transformations import transform_64_bw
+
 
 class RandomSavingAgent:
     def __init__(self, number_of_game_inputs, repo):
@@ -8,7 +10,7 @@ class RandomSavingAgent:
 
     def react_to_new_game_screen(self, screen_shot, score):
         inputs = [random.choice([0, 1]) for _ in range(self.no_inputs)]
-
+        screen = transform_64_bw(screen_shot)
         self.repo.commit(screen_shot, score, inputs)
 
         return inputs

@@ -1,14 +1,6 @@
 import itertools
-from config import *
-from game_controller import GameController
-from gamestate_repo import GamestateRepo
-from random_agent import RandomAgent
-from random_saving_agent import RandomSavingAgent
-from supervised_vm import SupervisedVmDecorator
-from vm_host import VmHost
-
 import logging
-logging.basicConfig(format='%(asctime)s %(message)s', datefmt='%H:%M:%S',  level=logging.DEBUG)
+
 
 class GameplayJob:
     def __init__(self, environment, controller, agent, log_id=None):
@@ -43,10 +35,3 @@ class GameplayJob:
         logging.info(self.log_id + "Starting game environment")
         self.environment.start()
         logging.info(self.log_id + "Game environment up and running")
-
-game_vm = SupervisedVmDecorator(VmHost(MARIO_VM_CONFIG, mode='gui'))
-controller = GameController(game_vm, MARIO_VM_SCORE_RECT, ['A', 'LEFT', 'RIGHT'])
-player = RandomSavingAgent(3, GamestateRepo('12'))
-
-job = GameplayJob(game_vm, controller, player, "12")
-job.run()
