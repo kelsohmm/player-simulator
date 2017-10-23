@@ -1,8 +1,10 @@
 import logging
 import sys
 import os
-
 import psutil
+import subprocess
+
+VM_SUPERVISOR_SCRIPT_FILENAME = 'vm_process_supervisor.py'
 
 
 class SupervisedVmDecorator:
@@ -19,10 +21,13 @@ class SupervisedVmDecorator:
         self.supervisor_process = psutil.Process(supervisor_pid)
 
     def _start_detached_process(self, self_pid, vm_pid):
+        DETACHED_PROCESS = 0x00000008
+        CREATE_NEW_PROCESS_GROUP = 0x00000200
+
         command = sys.executable or 'python'
-        return os.spawnl(os.P_NOWAITO,  # mode - detached
-                          command,  #command
-                          command, 'vm_process_supervisor.py', str(self_pid), str(vm_pid))  # args
+        return subprocess.Popen([command, VM_SUPERVISOR_SCRIPT_FILENAME, str(self_pid), str(vm_pid)],
+                                close_fds = True,
+                                creationflags= DETACHED_PROCESS | CREATE_NEW_PROCESS_GROUP).pid
 
     def stop(self):
         self.supervisor_process.kill()
