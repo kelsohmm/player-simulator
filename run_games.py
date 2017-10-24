@@ -11,7 +11,7 @@ NO_GAMES = 200
 
 for game_number in range(NO_GAMES):
     logging.info("Starting job %d", game_number)
-    game_vm = SupervisedVmDecorator(VmHost(MARIO_VM_CONFIG, mode='headless'))
+    game_vm = SupervisedVmDecorator(VmHost(MARIO_VM_CONFIG, mode='gui'))
     controller = GameController(game_vm, MARIO_VM_SCORE_RECT, ['A', 'LEFT', 'RIGHT'])
     player = RandomSavingAgent(3, GamestateRepo(str(game_number)))
 

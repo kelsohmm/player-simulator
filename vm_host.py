@@ -2,10 +2,7 @@ import itertools
 from time import sleep
 from virtualbox import VirtualBox, Session
 from virtualbox.library import LockType, SessionType, BitmapFormat
-import scipy.misc
 import numpy as np
-
-from config import MARIO_VM_CONFIG
 
 _SCANCODES = {
     'ESC': [[0x01], [0x81]],
@@ -149,7 +146,8 @@ class VmHost:
 
     def stop(self):
         progress = self.session.console.power_down()
-        progress.wait_for_completion(-1)
+        progress.wait_for_completion(self._VM_STARTUP_TIMEOUT)
+        sleep(1) # wait for completion doesn't wait enough? :/
 
     def take_screen_shot(self):
         display = self.session.console.display

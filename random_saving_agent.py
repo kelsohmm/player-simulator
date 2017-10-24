@@ -11,7 +11,7 @@ class RandomSavingAgent:
     def react_to_new_game_screen(self, screen_shot, score):
         inputs = [random.choice([0, 1]) for _ in range(self.no_inputs)]
         screen = transform_64_bw(screen_shot)
-        self.repo.commit(screen_shot, score, inputs)
+        self.repo.commit(screen, score, inputs)
 
         return inputs
 

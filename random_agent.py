@@ -7,3 +7,6 @@ class RandomAgent:
 
     def react_to_new_game_screen(self, screen_shot, score):
         return [random.choice([0, 1]) for _ in range(self.no_inputs)]
+
+    def finish(self, screen_shot, score):
+        pass
