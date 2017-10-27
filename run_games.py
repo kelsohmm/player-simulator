@@ -1,14 +1,10 @@
 import datetime
-
 import os
 
+from agents.neural_network_agent import NeuralNetworkAgent
 from config import *
 from game_controller import GameController
 from gameplay_job import GameplayJob
-from gamestate_repo import GamestateRepo
-from neural_network_agent import NeuralNetworkAgent
-from random_agent import RandomAgent
-from random_saving_agent import RandomSavingAgent
 from supervised_vm import SupervisedVmDecorator
 from vm_host import VmHost
 
