@@ -1,3 +1,7 @@
+import datetime
+
+import os
+
 from config import *
 from game_controller import GameController
 from gameplay_job import GameplayJob
@@ -10,6 +14,9 @@ from vm_host import VmHost
 
 NO_GAMES = 200
 MARIO_POSSIBLE_MOVES = [[0, 0, 0], [0, 0, 1], [0, 1, 0], [1, 0, 0], [0, 0, 1], [1, 1, 0]]
+DUMP_DIR = os.path.join('gamestate_dumps', datetime.datetime.now().strftime("%Y%m%d-%H%M%S"))
+if not os.path.exists(DUMP_DIR):
+    os.makedirs(DUMP_DIR)
 
 for game_number in range(NO_GAMES):
     logging.info("Starting job %d", game_number)

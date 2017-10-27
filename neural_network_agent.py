@@ -1,6 +1,6 @@
 import numpy as np
 import keras
-from image_transformations import transform_64_bw
+from image_transformations import resize_128
 
 
 class NeuralNetworkAgent:
@@ -10,13 +10,13 @@ class NeuralNetworkAgent:
         self.repo = repo
         self.no_inputs = len(possible_game_inputs)
         self.inputs_keys = np.asarray([inputs for inputs in possible_game_inputs], dtype=np.uint8)
-        self.inputs_this_frame = np.zeros((self.no_inputs, 1, 64, 64), dtype=np.uint8)
+        self.inputs_this_frame = np.zeros((self.no_inputs, 128, 128, 3), dtype=np.uint8)
         self.inputs_prev_frame = None
         self.possible_keys = possible_game_inputs
 
     def react_to_new_game_screen(self, screen_shot, score):
-        screen = transform_64_bw(screen_shot)
-        self.inputs_this_frame = screen.reshape((1, 1, 64, 64)).repeat(self.no_inputs, axis=0)
+        screen = resize_128(screen_shot)
+        self.inputs_this_frame = screen.reshape((1, 128, 128, 3)).repeat(self.no_inputs, axis=0)
         self.guard_prev_screen(screen)
 
         predictions = self.predict_rewards()

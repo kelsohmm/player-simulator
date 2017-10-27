@@ -5,10 +5,8 @@ import os
 class GamestateRepo:
     DUMPS_DIR = 'gamestate_dumps'
 
-    def __init__(self, file_id):
-        self.file_path = os.path.join(
-            self.DUMPS_DIR,
-            datetime.datetime.now().strftime("%Y%m%d-%H%M%S_") + file_id + ".npy")
+    def __init__(self, file_path):
+        self.file_path = file_path
         self.file = None
         self.matrix = None
 
