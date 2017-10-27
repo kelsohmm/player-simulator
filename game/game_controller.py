@@ -30,7 +30,8 @@ class GameController:
     SIMILIARITY_TRESHOLD = 0.9
     MAX_SCORE_JUMP = 2000
 
-    def __init__(self, vm_host, score_rect, key_activity_array):
+    def __init__(self, vm_host, controller_config):
+        score_rect, key_activity_array = controller_config
         self.host = vm_host
         self.score_rect = score_rect
         self.key_activity_mapping = key_activity_array
