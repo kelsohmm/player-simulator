@@ -4,11 +4,12 @@ import os
 import psutil
 import subprocess
 
-VM_SUPERVISOR_SCRIPT_FILENAME = 'vm_process_supervisor.py'
+VM_SUPERVISOR_SCRIPT_FILEPATH = os.path.join('game','vm_process_supervisor.py')
 
 
 class SupervisedVmDecorator:
     def __init__(self, vm):
+        assert(os.path.exists(VM_SUPERVISOR_SCRIPT_FILEPATH))
         self.vm = vm
         self.supervisor_process = None
 
@@ -25,7 +26,7 @@ class SupervisedVmDecorator:
         CREATE_NEW_PROCESS_GROUP = 0x00000200
 
         command = sys.executable or 'python'
-        return subprocess.Popen([command, VM_SUPERVISOR_SCRIPT_FILENAME, str(self_pid), str(vm_pid)],
+        return subprocess.Popen([command, VM_SUPERVISOR_SCRIPT_FILEPATH, str(self_pid), str(vm_pid)],
                                 close_fds = True,
                                 creationflags= DETACHED_PROCESS | CREATE_NEW_PROCESS_GROUP).pid
 

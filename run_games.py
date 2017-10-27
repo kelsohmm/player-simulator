@@ -1,12 +1,13 @@
 import datetime
 import os
 
+from game.game_controller import GameController
+from game.vm_host import VmHost
+
 from agents.neural_network_agent import NeuralNetworkAgent
 from config import *
-from game_controller import GameController
-from gameplay_job import GameplayJob
-from supervised_vm import SupervisedVmDecorator
-from vm_host import VmHost
+from game.gameplay_job import GameplayJob
+from game.supervised_vm import SupervisedVmDecorator
 
 NO_GAMES = 200
 MARIO_POSSIBLE_MOVES = [[0, 0, 0], [0, 0, 1], [0, 1, 0], [1, 0, 0], [0, 0, 1], [1, 1, 0]]
