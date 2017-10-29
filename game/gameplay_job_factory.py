@@ -5,7 +5,8 @@ from game.game_controller import GameController
 from game.gameplay_job import GameplayJob
 
 
-def create_vm_game_job(game_config, agent_name, save_path, mode):
+def create_vm_game_job(args):
+    game_config, agent_name, save_path, mode = args
     vm_config, controller_config, possible_moves = game_config
 
     vm = SupervisedVmDecorator(vm_config, mode)
