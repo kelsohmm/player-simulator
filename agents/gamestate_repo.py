@@ -1,5 +1,5 @@
 import numpy as np
-import datetime
+import time
 import os
 
 from config import JOB_ID
@@ -18,14 +18,17 @@ class GamestateRepo:
         self.matrix['screen'] = screen
         self.matrix['score'] = score
         self.matrix['inputs'] = inputs
+        self.matrix['time'] = self.start_time - time.time()
 
         np.save(self.file, self.matrix)
 
     def _init(self, screen, inputs):
         self.matrix = np.zeros(1,dtype=[('screen', screen.dtype, screen.shape),
                                         ('score',np.int16),
-                                        ('inputs', np.uint16, len(inputs))])
+                                        ('inputs', np.uint16, len(inputs)),
+                                        ('time', np.float64)])
         self.file = open(self.file_path, 'w+b')
+        self.start_time = time.time()
 
     def close(self):
         self.file.close()

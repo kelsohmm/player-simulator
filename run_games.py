@@ -11,14 +11,14 @@ freeze_support()
 if __name__ == '__main__':
 
     ### RUN CONFIG
-    NO_GAMES = 2
-    NO_JOBS = 1
+    NO_GAMES = 100
+    NO_JOBS = 2
     MODE = 'headless'  # 'headless' or 'gui'
-    AGENT_NAME = 'AGENT_NN'
+    AGENT_NAME = 'AGENT_RANDOM'
     SAVING = True
 
     ### CODE
-    proc_pool = Pool(NO_JOBS)
+    proc_pool = Pool(NO_JOBS, maxtasksperchild=10)
     save_path = None
     if SAVING:
         save_path = os.path.join('gamestate_dumps', AGENT_NAME + '_' + datetime.datetime.now().strftime("%Y%m%d-%H%M%S"))
