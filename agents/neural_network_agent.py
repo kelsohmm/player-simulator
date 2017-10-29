@@ -1,3 +1,5 @@
+import logging
+
 import numpy as np
 import keras
 from image_transformations import resize_128
@@ -5,7 +7,7 @@ from image_transformations import resize_128
 
 class NeuralNetworkAgent:
     def __init__(self, model_path, possible_game_inputs, repo = None):
-        print("--- INITIALIZING NN AGENT FROM MODEL PATH: ", model_path)
+        logging.info("--- INITIALIZING NN AGENT FROM MODEL PATH: %s", model_path)
         self.model = keras.models.load_model(model_path)
         self.repo = repo
         self.no_inputs = len(possible_game_inputs)
@@ -22,7 +24,7 @@ class NeuralNetworkAgent:
         predictions = self.predict_rewards()
 
         best_inputs = self.possible_keys[predictions.argmax()]
-        print(predictions.tolist(), " Chose: ", best_inputs)
+        logging.debug('Rewards: %s, Chose: %s', str(predictions.tolist()), str(best_inputs))
 
         self.save_state(best_inputs, score, screen)
         return best_inputs

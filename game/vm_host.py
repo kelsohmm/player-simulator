@@ -1,8 +1,13 @@
 import itertools
+import random
 from time import sleep
+
+import datetime
 from virtualbox import VirtualBox, Session
-from virtualbox.library import LockType, SessionType, BitmapFormat
+from virtualbox.library import LockType, SessionType, BitmapFormat, CloneOptions, CleanupMode
 import numpy as np
+
+VM_CLONE_TAG = 'player_simulator_clone_'
 
 _SCANCODES = {
     'ESC': [[0x01], [0x81]],
@@ -111,32 +116,28 @@ class VmHost:
     _ONLY_SCREEN_ID = 0
     _SNAP_RESTORE_TIMEOUT = 30 * 1000
     _VM_STARTUP_TIMEOUT = 60 * 1000
-    _GUEST_SESSION_NAME = '__GUEST_SESSION__'
 
     def __init__(self, vm_config, mode='gui'):
         vm_name, snap_name, window_rect = vm_config
-        vbox = VirtualBox()
         self.session = Session()
-        self.machine = vbox.find_machine(vm_name)
+        self._clone_machine(snap_name, vm_name)
         self.window_rect = window_rect
-        self.snap_name = snap_name
         self.mode = mode
 
+    def _clone_machine(self, snap_name, vm_name):
+        vbox = VirtualBox()
+        self.machine = vbox.find_machine(vm_name).clone(snap_name,
+                                                        name=(self.make_cloned_vm_name(snap_name, vm_name)),
+                                                        options=[CloneOptions.link])
+
+    def make_cloned_vm_name(self, snap_name, vm_name):
+        return VM_CLONE_TAG + '_' + \
+               vm_name + '_' + \
+               snap_name + '_' +\
+               str(datetime.datetime.now()) + '_' + str(random.randint(0, 99999))
 
     def start(self):
-        self._set_snapshot()
         self._launch_vm()
-
-    def _set_snapshot(self):
-        self.machine.lock_machine(self.session, LockType.write)
-        assert (self.session.type_p == SessionType.write_lock)
-        progress = self.session.machine.restore_snapshot(self.machine.find_snapshot(self.snap_name))
-
-        progress.wait_for_completion(self._SNAP_RESTORE_TIMEOUT)
-        if not progress.completed:
-            raise TimeoutError
-
-        self.session.unlock_machine()
 
     def _launch_vm(self):
         progress = self.machine.launch_vm_process(self.session, type_p=self.mode)
@@ -147,7 +148,10 @@ class VmHost:
     def stop(self):
         progress = self.session.console.power_down()
         progress.wait_for_completion(self._VM_STARTUP_TIMEOUT)
-        sleep(1) # wait for completion doesn't wait enough? :/
+        sleep(1)  # wait for completion doesn't wait enough? :/
+        deleted_media = self.machine.unregister(CleanupMode.full)
+        progress = self.machine.delete_config(deleted_media)
+        progress.wait_for_completion()
 
     def take_screen_shot(self):
         display = self.session.console.display
