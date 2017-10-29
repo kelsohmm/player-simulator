@@ -26,7 +26,7 @@ if __name__ == '__main__':
             os.makedirs(save_path)
 
     proc_pool.map(create_vm_game_job,
-                  [(MARIO_CONFIG, AGENT_NAME, save_path, MODE) for _ in range(NO_GAMES)],
+                  [(job_number+1, MARIO_CONFIG, AGENT_NAME, save_path, MODE) for job_number in range(NO_GAMES)],
                   chunksize=1)
 
 

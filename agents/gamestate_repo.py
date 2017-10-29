@@ -1,13 +1,12 @@
 import numpy as np
 import time
 import os
-
-from config import JOB_ID
+from config import GLOB_JOB_ID
 
 
 class GamestateRepo:
     def __init__(self, file_path):
-        self.file_path = os.path.join(file_path, JOB_ID + '.npy')
+        self.file_path = os.path.join(file_path, GLOB_JOB_ID.job_id + '.npy')
         self.file = None
         self.matrix = None
 

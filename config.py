@@ -13,5 +13,16 @@ _MARIO_POSSIBLE_MOVES = [[0, 0, 0], [0, 0, 1], [0, 1, 0], [1, 0, 0], [0, 0, 1], 
 MARIO_CONFIG = (_MARIO_VM_CONFIG, _MARIO_CONTROLLER_CONFIG, _MARIO_POSSIBLE_MOVES)
 
 ### GLOBAL SETTINGS ###
-JOB_ID = '{num:07d}'.format(num=random.randint(0, 1_000_000))
-logging.basicConfig(format='%(asctime)s JOB:' + JOB_ID + ' %(message)s', datefmt='%H:%M:%S',  level=logging.DEBUG)
+
+class JobIdConfig:
+    def __init__(self):
+        self.set(0)
+
+    def set(self, job_id):
+        self.job_id = '{num:03d}'.format(num=job_id)
+        for handler in logging.root.handlers[:]:  # needed to reconfigure logging
+            logging.root.removeHandler(handler)
+        logging.basicConfig(format='%(asctime)s JOB:' + self.job_id + ' %(message)s', datefmt='%H:%M:%S',  level=logging.DEBUG)
+
+GLOB_JOB_ID = JobIdConfig()
+
