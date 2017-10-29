@@ -1,4 +1,4 @@
-from gamestate_repo import GamestateRepo
+from agents.gamestate_repo import GamestateRepo
 
 
 def agent_factory(agent_name, possible_keys, save_path):
