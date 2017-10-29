@@ -98,7 +98,6 @@ class GameController:
         score_bw = cv2.cvtColor(score_screen, cv2.COLOR_RGB2GRAY)
         (thresh, score_tresh) = cv2.threshold(score_bw, 10, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)
         score_img = Image.fromarray(score_tresh)
-        score_img.save("score.png")
         score_text = pytesseract.image_to_string(score_img, config="--psm 7")
         score_digits = ''.join(i for i in score_text if i.isdigit())
         return score_digits
