@@ -1,6 +1,5 @@
 import datetime
 import os
-
 from multiprocessing import Process, freeze_support
 from config import *
 from game.gameplay_job_factory import create_vm_game_job
@@ -19,7 +18,7 @@ if __name__ == '__main__':
     for game_number in range(NO_GAMES):
         logging.info("Starting job %d", game_number)
         agent_config = ('AGENT_NN', MARIO_POSSIBLE_MOVES)
-        p = Process(target=create_vm_game_job, args=(MARIO_CONFIG, agent_config, str(game_number), 'headless'))
+        p = Process(target=create_vm_game_job, args=(MARIO_CONFIG, agent_config, 'headless'))
         p.start()
         processes.append(p)
 

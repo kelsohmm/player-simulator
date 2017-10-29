@@ -4,13 +4,15 @@ import os
 import psutil
 import subprocess
 
+from game.vm_host import VmHost
+
 VM_SUPERVISOR_SCRIPT_FILEPATH = os.path.join('game','vm_process_supervisor.py')
 
 
 class SupervisedVmDecorator:
-    def __init__(self, vm):
+    def __init__(self, vm_config, mode):
         assert(os.path.exists(VM_SUPERVISOR_SCRIPT_FILEPATH))
-        self.vm = vm
+        self.vm = VmHost(vm_config, mode)
         self.supervisor_process = None
 
     def start(self):
