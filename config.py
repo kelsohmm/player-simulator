@@ -9,10 +9,9 @@ _MARIO_VM_CONFIG = ('mariosnap', 'mariosnap3', _MARIO_WINDOW_RECT)
 _MARIO_SCORE_RECT = (55, 79, 214, 103)
 _MARIO_USED_KEYS = ['A', 'LEFT', 'RIGHT']
 _MARIO_CONTROLLER_CONFIG = (_MARIO_SCORE_RECT, _MARIO_USED_KEYS)
-MARIO_CONFIG = (_MARIO_VM_CONFIG, _MARIO_CONTROLLER_CONFIG)
+_MARIO_POSSIBLE_MOVES = [[0, 0, 0], [0, 0, 1], [0, 1, 0], [1, 0, 0], [0, 0, 1], [1, 1, 0]]
+MARIO_CONFIG = (_MARIO_VM_CONFIG, _MARIO_CONTROLLER_CONFIG, _MARIO_POSSIBLE_MOVES)
 
 ### GLOBAL SETTINGS ###
-if not __name__ == '__main__':  # log tag for jobs started with multiprocess
-    logging.basicConfig(format='%(asctime)s JOB:' + '{num:07d}'.format(num=random.randint(0, 1_000_000)) + ' %(message)s', datefmt='%H:%M:%S',  level=logging.DEBUG)
-else:
-    logging.basicConfig(format='%(asctime)s %(message)s', datefmt='%H:%M:%S',  level=logging.DEBUG)
+JOB_ID = '{num:07d}'.format(num=random.randint(0, 1_000_000))
+logging.basicConfig(format='%(asctime)s JOB:' + JOB_ID + ' %(message)s', datefmt='%H:%M:%S',  level=logging.DEBUG)

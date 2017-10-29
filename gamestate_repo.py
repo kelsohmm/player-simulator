@@ -2,11 +2,12 @@ import numpy as np
 import datetime
 import os
 
-class GamestateRepo:
-    DUMPS_DIR = 'gamestate_dumps'
+from config import JOB_ID
 
+
+class GamestateRepo:
     def __init__(self, file_path):
-        self.file_path = file_path
+        self.file_path = os.path.join(file_path, JOB_ID + '.npy')
         self.file = None
         self.matrix = None
 
