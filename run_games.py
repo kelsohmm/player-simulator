@@ -21,7 +21,7 @@ if __name__ == '__main__':
     proc_pool = Pool(NO_JOBS, maxtasksperchild=10)
     save_path = None
     if SAVING:
-        save_path = os.path.join('gamestate_dumps', AGENT_NAME + '_' + datetime.datetime.now().strftime("%Y%m%d-%H%M%S"))
+        save_path = os.path.join(DUMPS_DIR, AGENT_NAME + '_' + datetime.datetime.now().strftime("%Y%m%d-%H%M%S"))
         if not os.path.exists(save_path):
             os.makedirs(save_path)
 

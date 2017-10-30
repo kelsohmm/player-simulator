@@ -3,6 +3,7 @@ import logging
 
 ### VM_CONFIGS ###
 # format: (VM_NAME, SNAPSHOT_NAME, WINDOW_RECT(window_width, window_height, window_x, window_y))
+import os
 
 _MARIO_WINDOW_RECT = (802, 607, 280, 31)
 _MARIO_VM_CONFIG = ('mariosnap', 'mariosnap3', _MARIO_WINDOW_RECT)
@@ -13,6 +14,7 @@ _MARIO_POSSIBLE_MOVES = [[0, 0, 0], [0, 0, 1], [0, 1, 0], [1, 0, 0], [0, 0, 1], 
 MARIO_CONFIG = (_MARIO_VM_CONFIG, _MARIO_CONTROLLER_CONFIG, _MARIO_POSSIBLE_MOVES)
 
 ### GLOBAL SETTINGS ###
+SAVE_API_VERSION = '1.0'
 
 class JobIdConfig:
     def __init__(self):
@@ -25,4 +27,5 @@ class JobIdConfig:
         logging.basicConfig(format='%(asctime)s JOB:' + self.job_id + ' %(message)s', datefmt='%H:%M:%S',  level=logging.DEBUG)
 
 GLOB_JOB_ID = JobIdConfig()
-
+DUMPS_DIR = os.path.join('gamestate_dumps', 'api-'+SAVE_API_VERSION)
+MODEL_PATH = os.path.join(DUMPS_DIR, 'model.h5')

@@ -2,12 +2,11 @@ import os
 import random
 import numpy as np
 import keras
-from keras.utils import plot_model
+from config import DUMPS_DIR, MODEL_PATH
 
-dumps_path = 'gamestate_dumps'  # TODO: add api versioning
-dump_files = [os.path.join(dumps_path, game_path, f)
-              for game_path in os.listdir(dumps_path)
-              for f in os.listdir(os.path.join(dumps_path, game_path))]
+dump_files = [os.path.join(DUMPS_DIR, game_path, f)
+              for game_path in os.listdir(DUMPS_DIR)
+              for f in os.listdir(os.path.join(DUMPS_DIR, game_path))]
 random.shuffle(dump_files)
 print('GAMEDUMPS FOUND: ', dump_files)
 
@@ -90,7 +89,7 @@ history = model.fit([inputs_time, inputs_keys, inputs_this_frame, inputs_prev_fr
                       epochs=30, verbose=2)
 print(history)
 
-model.save('model.h5')
+model.save(MODEL_PATH)
 
 print('--- EVALUATING ---')
 
