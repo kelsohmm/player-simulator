@@ -11,11 +11,11 @@ freeze_support()
 if __name__ == '__main__':
 
     ### RUN CONFIG
-    NO_GAMES = 200
-    NO_JOBS = 4
+    NO_GAMES = 4
+    NO_JOBS = 2
     MODE = 'headless'  # 'headless' or 'gui'
     AGENT_NAME = 'AGENT_RANDOM'
-    SAVING = False
+    SAVING = True
 
     ### CODE
     proc_pool = Pool(NO_JOBS, maxtasksperchild=10)
