@@ -5,8 +5,12 @@ def _createNNAgent(possible_keys, repo):
     from agents.neural_network_agent import NeuralNetworkAgent
     return NeuralNetworkAgent(MODEL_PATH, possible_keys, repo)
 
-def agent_factory(agent_name, possible_keys, repo):
+def agent_factory(agent_name, possible_keys, save_path):
     from agents.random_agent import RandomAgent
+
+    repo = None
+    if isinstance(save_path, str):
+        repo = GamestateRepo(save_path)
 
     return {
         'AGENT_RANDOM': lambda: RandomAgent(possible_keys, repo),
