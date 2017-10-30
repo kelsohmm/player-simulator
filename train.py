@@ -1,17 +1,16 @@
 import os
 import random
-
 import numpy as np
 import keras
 from keras.utils import plot_model
 
-GAME_END_REWARD = -10000
-
-paths = ['gamestate_dumps\\20171027-011506_',
-         'gamestate_dumps\\AGENT_NN_20171029-173311',
-         'gamestate_dumps\\AGENT_NN_20171029-195942']
-dump_files = [os.path.join(path, f) for path in paths for f in os.listdir(path)]
+dumps_path = 'gamestate_dumps'  # TODO: add api versioning
+dump_files = [os.path.join(dumps_path, game_path, f)
+              for game_path in os.listdir(dumps_path)
+              for f in os.listdir(os.path.join(dumps_path, game_path))]
 random.shuffle(dump_files)
+print('GAMEDUMPS FOUND: ', dump_files)
+
 
 print("--- LOADING FILE DUMPS ---")
 
@@ -40,7 +39,7 @@ labels = np.zeros((no_state_dumps,), dtype=np.float64)
 def calc_rewards(game_dump):
     GAMMA = 0.5
     rewards = np.zeros((len(game_dump),), dtype=np.float16)
-    rewards[len(game_dump) - 1] = GAME_END_REWARD
+    rewards[len(game_dump) - 1] = game_dump[len(game_dump) - 1]['score'] - game_dump[len(game_dump) - 2]['score']
     for i in reversed(range(1, len(game_dump) - 1)):
         rewards[i] = game_dump[i]['score'] - game_dump[i-1]['score'] + (GAMMA * rewards[i+1])
     return rewards
@@ -57,10 +56,11 @@ for game_dump in game_dumps:
         inputs_prev_frame[current_row] = game_dump[state_idx-1]['screen']
         labels[state_idx] = rewards[state_idx]
         current_row += 1
-
 labels /= labels.max()
 labels -= labels.mean()
-print(labels)
+labels *= 2
+print(np.argwhere(np.isnan(labels)).tolist())
+print(labels.tolist())
 
 print("--- STARTING LEARNING PROCESS ---")
 
@@ -78,20 +78,21 @@ hidden = keras.layers.Dense(64, activation='relu')(hidden)
 hidden = keras.layers.Dense(32, activation='relu')(hidden)
 main_output = keras.layers.Dense(1, name='main_output')(hidden)
 
-model = keras.models.Model(inputs=[keys_input, this_frame_input, prev_frame_input],
+model = keras.models.Model(inputs=[time_input, keys_input, this_frame_input, prev_frame_input],
                            outputs=[main_output])
-
-plot_model(model, to_file='model.png')
 
 model.compile(optimizer='rmsprop', loss='binary_crossentropy')
 
-history = model.fit([inputs_keys, inputs_this_frame, inputs_prev_frame],
+# plot_model(model, to_file='model.png')
+
+history = model.fit([inputs_time, inputs_keys, inputs_this_frame, inputs_prev_frame],
                       [labels],
-                      epochs=3, verbose=2)
+                      epochs=30, verbose=2)
+print(history)
 
 model.save('model.h5')
 
 print('--- EVALUATING ---')
 
-print(model.evaluate([inputs_keys, inputs_this_frame, inputs_prev_frame],
+print(model.evaluate([time_input, inputs_keys, inputs_this_frame, inputs_prev_frame],
                 [labels]))

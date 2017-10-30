@@ -16,22 +16,22 @@ class NeuralNetworkAgent:
         self.inputs_prev_frame = None
         self.possible_keys = possible_game_inputs
 
-    def react_to_new_game_screen(self, screen_shot, score):
+    def react_to_new_game_screen(self, screen_shot, score, time):
         screen = resize_128(screen_shot)
         self.inputs_this_frame = screen.reshape((1, 128, 128, 3)).repeat(self.no_inputs, axis=0)
         self.guard_prev_screen(screen)
 
-        predictions = self.predict_rewards()
+        predictions = self.predict_rewards(time)
 
         best_inputs = self.possible_keys[predictions.argmax()]
         logging.debug('Rewards: %s, Chose: %s', str(predictions.tolist()), str(best_inputs))
 
-        self.save_state(best_inputs, score, screen)
+        self.save_state(best_inputs, score, screen, time)
         return best_inputs
 
-    def save_state(self, best_inputs, score, screen):
+    def save_state(self, best_inputs, score, screen, time):
         if not self.repo is None:
-            self.repo.commit(screen, score, best_inputs)
+            self.repo.commit(screen, score, best_inputs, time)
         self.inputs_prev_frame = self.inputs_this_frame
 
     def finish(self, screen_shot, score):
@@ -42,5 +42,7 @@ class NeuralNetworkAgent:
         if self.inputs_prev_frame is None:
             self.inputs_prev_frame = self.inputs_this_frame
 
-    def predict_rewards(self):
-        return self.model.predict([self.inputs_keys, self.inputs_this_frame, self.inputs_prev_frame])
+    def predict_rewards(self, time):
+        time_np = np.zeros(shape=(self.no_inputs,1,), dtype=np.float64)
+        time_np[:, 0] = time
+        return self.model.predict([time_np, self.inputs_keys, self.inputs_this_frame, self.inputs_prev_frame])

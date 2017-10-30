@@ -1,5 +1,4 @@
 import numpy as np
-import time
 import os
 from config import GLOB_JOB_ID
 
@@ -10,14 +9,14 @@ class GamestateRepo:
         self.file = None
         self.matrix = None
 
-    def commit(self, screen, score, inputs):
+    def commit(self, screen, score, inputs, time):
         if self.file is None:
             self._init(screen, inputs)
 
         self.matrix['screen'] = screen
         self.matrix['score'] = score
         self.matrix['inputs'] = inputs
-        self.matrix['time'] = self.start_time - time.time()
+        self.matrix['time'] = time
 
         np.save(self.file, self.matrix)
 
@@ -27,7 +26,6 @@ class GamestateRepo:
                                         ('inputs', np.uint16, len(inputs)),
                                         ('time', np.float64)])
         self.file = open(self.file_path, 'w+b')
-        self.start_time = time.time()
 
     def close(self):
         self.file.close()
