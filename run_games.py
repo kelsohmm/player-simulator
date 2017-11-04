@@ -1,21 +1,23 @@
 import datetime
-import os
-from asyncio import sleep
-from multiprocessing import Process, freeze_support
+from multiprocessing import freeze_support
 from multiprocessing.pool import Pool
-
 from config import *
 from game.gameplay_job_factory import create_vm_game_job
 
 freeze_support()
 if __name__ == '__main__':
-
-    ### RUN CONFIG
-    NO_GAMES = 4
     NO_JOBS = 2
+    NO_GAMES = COLLECTING_NO_GAMES
     MODE = 'headless'  # 'headless' or 'gui'
-    AGENT_NAME = 'AGENT_RANDOM'
+    AGENT_NAME = COLLECTING_AGENT_NAME
     SAVING = True
+
+    if RUN_MODE == 'SHOW':
+        NO_GAMES = 1
+        MODE = 'gui'  # 'headless' or 'gui'
+        AGENT_NAME = 'AGENT_NN'
+        SAVING = False
+
 
     ### CODE
     proc_pool = Pool(NO_JOBS, maxtasksperchild=10)

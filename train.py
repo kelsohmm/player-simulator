@@ -1,12 +1,15 @@
 import os
 import random
 import numpy as np
-import keras
-from config import DUMPS_DIR, MODEL_PATH
+from config import DUMPS_DIR, MODEL_SAVE_PATH, MODEL_PREVIEW_PATH
 
-dump_files = [os.path.join(DUMPS_DIR, game_path, f)
-              for game_path in os.listdir(DUMPS_DIR)
-              for f in os.listdir(os.path.join(DUMPS_DIR, game_path))]
+api_subdirs = [api_subdir
+               for api_subdir in os.listdir(DUMPS_DIR)
+               if os.path.isdir(os.path.join(DUMPS_DIR, api_subdir))]
+
+dump_files = [os.path.join(DUMPS_DIR, api_subdir, filename)
+              for api_subdir in api_subdirs
+              for filename in os.listdir(os.path.join(DUMPS_DIR, api_subdir))][:5]
 random.shuffle(dump_files)
 print('GAMEDUMPS FOUND: ', dump_files)
 
@@ -36,7 +39,7 @@ inputs_time = np.zeros((no_state_dumps, 1), dtype=np.float64)
 labels = np.zeros((no_state_dumps,), dtype=np.float64)
 
 def calc_rewards(game_dump):
-    GAMMA = 0.5
+    GAMMA = 0.8
     rewards = np.zeros((len(game_dump),), dtype=np.float16)
     rewards[len(game_dump) - 1] = game_dump[len(game_dump) - 1]['score'] - game_dump[len(game_dump) - 2]['score']
     for i in reversed(range(1, len(game_dump) - 1)):
@@ -55,43 +58,42 @@ for game_dump in game_dumps:
         inputs_prev_frame[current_row] = game_dump[state_idx-1]['screen']
         labels[state_idx] = rewards[state_idx]
         current_row += 1
+print('NANs at: ', np.argwhere(np.isnan(labels)).tolist())
 labels /= labels.max()
-labels -= labels.mean()
-labels *= 2
-print(np.argwhere(np.isnan(labels)).tolist())
-print(labels.tolist())
+print('Labels: ', labels.tolist())
 
 print("--- STARTING LEARNING PROCESS ---")
 
-time_input = keras.Input(shape=(1,))
-keys_input = keras.Input(shape=(3,))
-this_frame_input = keras.Input(shape=(128, 128, 3))
-prev_frame_input = keras.Input(shape=(128, 128, 3))
+import keras as K
 
-shared_conv = keras.layers.Conv2D(filters=64, kernel_size=(8, 8), input_shape=(128, 128, 3), data_format='channels_last')
-conved_this_frame = keras.layers.Flatten()(shared_conv(this_frame_input))
-conved_prev_frame = keras.layers.Flatten()(shared_conv(prev_frame_input))
+time_input = K.Input(shape=(1,))
+keys_input = K.Input(shape=(3,))
+this_frame_input = K.Input(shape=(128, 128, 3))
+prev_frame_input = K.Input(shape=(128, 128, 3))
 
-hidden = keras.layers.concatenate([time_input, keys_input, conved_this_frame, conved_prev_frame], axis=-1)
-hidden = keras.layers.Dense(64, activation='relu')(hidden)
-hidden = keras.layers.Dense(32, activation='relu')(hidden)
-main_output = keras.layers.Dense(1, name='main_output')(hidden)
+shared_conv = K.layers.Conv2D(filters=64, kernel_size=(4, 4), input_shape=(128, 128, 3), data_format='channels_last')
+conved_this_frame = K.layers.Flatten()(shared_conv(this_frame_input))
+conved_prev_frame = K.layers.Flatten()(shared_conv(prev_frame_input))
 
-model = keras.models.Model(inputs=[time_input, keys_input, this_frame_input, prev_frame_input],
+hidden = K.layers.concatenate([time_input, keys_input, conved_this_frame, conved_prev_frame], axis=-1)
+hidden = K.layers.Dense(64, activation='relu')(hidden)
+hidden = K.layers.Dense(32, activation='relu')(hidden)
+main_output = K.layers.Dense(1, name='main_output')(hidden)
+
+model = K.models.Model(inputs=[time_input, keys_input, this_frame_input, prev_frame_input],
                            outputs=[main_output])
 
-model.compile(optimizer='rmsprop', loss='binary_crossentropy')
-
-# plot_model(model, to_file='model.png')
+model.compile(optimizer='rmsprop', loss='mean_squared_error')
 
 history = model.fit([inputs_time, inputs_keys, inputs_this_frame, inputs_prev_frame],
                       [labels],
-                      epochs=30, verbose=2)
-print(history)
+                      epochs=3 , verbose=2, validation_split=0.1)
+print(history.history)
 
-model.save(MODEL_PATH)
+model.save(MODEL_SAVE_PATH)
+K.utils.plot_model(model, to_file=MODEL_PREVIEW_PATH)
 
 print('--- EVALUATING ---')
 
-print(model.evaluate([time_input, inputs_keys, inputs_this_frame, inputs_prev_frame],
-                [labels]))
+print(model.evaluate([inputs_time, inputs_keys, inputs_this_frame, inputs_prev_frame],
+                     [labels]))
