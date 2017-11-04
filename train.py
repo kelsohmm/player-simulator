@@ -1,31 +1,12 @@
-import os
-import random
 import numpy as np
 from config import DUMPS_DIR, MODEL_SAVE_PATH, MODEL_PREVIEW_PATH
+from training.utils import find_all_filepaths, read_episode_files
 
-api_subdirs = [api_subdir
-               for api_subdir in os.listdir(DUMPS_DIR)
-               if os.path.isdir(os.path.join(DUMPS_DIR, api_subdir))]
-
-dump_files = [os.path.join(DUMPS_DIR, api_subdir, filename)
-              for api_subdir in api_subdirs
-              for filename in os.listdir(os.path.join(DUMPS_DIR, api_subdir))][:5]
-random.shuffle(dump_files)
+dump_files = find_all_filepaths(DUMPS_DIR, shuffle=True)
 print('GAMEDUMPS FOUND: ', dump_files)
 
-
 print("--- LOADING FILE DUMPS ---")
-
-game_dumps = []
-for filepath in dump_files:
-    state_dumps = []
-    with open(filepath, 'rb+') as f:
-        try:
-            while True:
-                state_dumps.append(np.load(f))
-        except:
-            pass
-    game_dumps.append(state_dumps)
+game_dumps = read_episode_files(dump_files)
 
 no_state_dumps = sum(map(lambda x: len(x), game_dumps)) \
                  - len(game_dumps)  # dropping first frame in each game dump
