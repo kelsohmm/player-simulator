@@ -2,14 +2,15 @@ import numpy as np
 from config import DUMPS_DIR, MODEL_SAVE_PATH, MODEL_PREVIEW_PATH
 from training.utils import find_all_filepaths, read_episode_files
 
-dump_files = find_all_filepaths(DUMPS_DIR, shuffle=True)
+dump_files = find_all_filepaths(DUMPS_DIR, shuffle=True)[:25]
 print('GAMEDUMPS FOUND: ', dump_files)
 
-print("--- LOADING FILE DUMPS ---")
+print('Episodes:', len(dump_files))
 game_dumps = read_episode_files(dump_files)
 
 no_state_dumps = sum(map(lambda x: len(x), game_dumps)) \
                  - len(game_dumps)  # dropping first frame in each game dump
+print('States:', no_state_dumps)
 
 inputs_shape = game_dumps[0][0]['inputs'].shape
 screen_shape = game_dumps[0][0]['screen'].shape
@@ -37,9 +38,10 @@ for game_dump in game_dumps:
         inputs_time[current_row] = game_dump[state_idx]['time']
         inputs_this_frame[current_row] = game_dump[state_idx]['screen']
         inputs_prev_frame[current_row] = game_dump[state_idx-1]['screen']
-        labels[state_idx] = rewards[state_idx]
+        labels[current_row] = rewards[state_idx]
         current_row += 1
 print('NANs at: ', np.argwhere(np.isnan(labels)).tolist())
+print('max reward:', labels.max())
 labels /= labels.max()
 print('Labels: ', labels.tolist())
 
@@ -68,7 +70,7 @@ model.compile(optimizer='rmsprop', loss='mean_squared_error')
 
 history = model.fit([inputs_time, inputs_keys, inputs_this_frame, inputs_prev_frame],
                       [labels],
-                      epochs=3 , verbose=2, validation_split=0.1)
+                      epochs=7, verbose=2, validation_split=0.1)
 print(history.history)
 
 model.save(MODEL_SAVE_PATH)
