@@ -148,10 +148,8 @@ class VmHost:
     def stop(self):
         progress = self.session.console.power_down()
         progress.wait_for_completion(self._VM_STARTUP_TIMEOUT)
-        sleep(1)  # wait for completion doesn't wait enough? :/
-        deleted_media = self.machine.unregister(CleanupMode.full)
-        progress = self.machine.delete_config(deleted_media)
-        progress.wait_for_completion()
+        sleep(3)  # wait for completion doesn't wait enough? :/
+        self.machine.remove()
 
     def take_screen_shot(self):
         display = self.session.console.display
