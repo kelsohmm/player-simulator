@@ -10,7 +10,7 @@ def agent_factory(agent_name, possible_keys, save_path):
 
     repo = None
     if isinstance(save_path, str):
-        repo = GamestateRepo(save_path)
+        repo = GamestateRepo(save_path, len(possible_keys[0]))
 
     return {
         'AGENT_RANDOM': lambda: RandomAgent(possible_keys, repo),

@@ -5,12 +5,12 @@ from training.utils import find_all_filepaths, read_episode_files
 dump_files = find_all_filepaths(DUMPS_DIR, shuffle=True)
 print('GAMEDUMPS FOUND: ', dump_files)
 
-print('Episodes:', len(dump_files))
 game_dumps = read_episode_files(dump_files)
+print('EPISODES:', len(game_dumps))
 
 no_state_dumps = sum(map(lambda x: len(x), game_dumps)) \
                  - len(game_dumps)  # dropping first frame in each game dump
-print('States:', no_state_dumps)
+print('STATES:', no_state_dumps)
 
 inputs_shape = game_dumps[0][0]['inputs'].shape
 screen_shape = game_dumps[0][0]['screen'].shape
@@ -42,7 +42,8 @@ for game_dump in game_dumps:
         current_row += 1
 print('NANs at: ', np.argwhere(np.isnan(labels)).tolist())
 print('max reward:', labels.max())
-labels /= labels.max()
+if labels.max() != 0.:
+    labels /= labels.max()
 print('Labels: ', labels.tolist())
 
 np.savez_compressed(DATA_SAVE_PATH,

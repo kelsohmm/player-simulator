@@ -10,7 +10,7 @@ COLLECTING_AGENT_NAME = 'AGENT_RANDOM'
 
 
 ### GLOBAL SETTINGS ###
-SAVE_API_VERSION = '1.0'
+SAVE_API_VERSION = '1.0'  # TODO: change gamestate_repo saving use savez_compressed
 
 class JobIdConfig:
     def __init__(self):
