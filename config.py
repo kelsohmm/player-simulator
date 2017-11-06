@@ -25,6 +25,7 @@ class JobIdConfig:
 GLOB_JOB_ID = JobIdConfig()
 DUMPS_DIR = os.path.join('gamestate_dumps', 'api-'+SAVE_API_VERSION)
 MODEL_SAVE_PATH = os.path.join(DUMPS_DIR, 'model.h5')
+DATA_SAVE_PATH = os.path.join(DUMPS_DIR, 'data.npz')
 MODEL_PREVIEW_PATH = os.path.join(DUMPS_DIR, 'model_preview.png')
 
 
