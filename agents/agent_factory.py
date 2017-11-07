@@ -8,9 +8,7 @@ def _createNNAgent(possible_keys, repo):
 def agent_factory(agent_name, possible_keys, save_path):
     from agents.random_agent import RandomAgent
 
-    repo = None
-    if isinstance(save_path, str):
-        repo = GamestateRepo(save_path, len(possible_keys[0]))
+    repo = GamestateRepo(save_path, len(possible_keys[0]))
 
     return {
         'AGENT_RANDOM': lambda: RandomAgent(possible_keys, repo),
