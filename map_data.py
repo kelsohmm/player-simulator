@@ -20,14 +20,13 @@ for game_dump in game_dumps:
     map_one_episode(game_dump, data[current_row:current_row+no_states])
     current_row += no_states
 
-print('max reward:', data[:]['reward'].max())
-if data[:]['reward'].max() != 0.:
-    data[:]['reward'] /= data[:]['reward'].max()
-print('Rewards: ', data[:]['reward'].tolist())
+max = np.nanmax(data[:]['rewards'])
+print('max reward:', max)
+if max != 0.:
+    data[:]['rewards'] /= max
+print('Rewards: ', data[:]['rewards'].tolist())
 
 print('--- SAVING MAPPED DATA ---')
 np.savez_compressed(DATA_SAVE_PATH,
-                    inputs_keys=data[:]['inputs'],
                     inputs_frame=data[:]['conv_input'],
-                    inputs_time=data[:]['time'],
-                    labels=data[:]['reward'])
+                    labels=data[:]['rewards'])
