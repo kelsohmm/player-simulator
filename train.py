@@ -17,13 +17,15 @@ if __name__ == '__main__':
 
     frame_input = K.Input(shape=(128, 128, 3), name='frame_input')
 
-    conv = K.layers.Conv2D(filters=32, kernel_size=6, strides=2, name='conv_1', input_shape=(128, 128, 3), data_format='channels_last')(frame_input)
-    conv = K.layers.Conv2D(filters=64, kernel_size=3, strides=2, name='conv_2')(conv)
+    conv = K.layers.Conv2D(filters=32, kernel_size=8, strides=4, name='conv_1', input_shape=(128, 128, 3), data_format='channels_last')(frame_input)
+    conv = K.layers.Conv2D(filters=64, kernel_size=4, strides=2, name='conv_2')(conv)
+    conv = K.layers.Conv2D(filters=64, kernel_size=3, strides=2, name='conv_3')(conv)
     conved_frame = K.layers.Flatten()(conv)
-    # flatted_frame = K.layers.Flatten()(frame_input)
+    flat_frame = K.layers.Flatten()(frame_input)
 
-    hidden = K.layers.Dense(512, activation='relu', name='hidden_1')(conved_frame)
-    hidden = K.layers.Dense(256, activation='relu', name='hidden_2')(hidden)
+    concat = K.layers.concatenate([conved_frame, flat_frame])
+    hidden = K.layers.Dense(2048, activation='relu', name='hidden_1')(concat)
+    hidden = K.layers.Dense(512, activation='relu', name='hidden_2')(hidden)
     main_output = K.layers.Dense(6, name='main_output')(hidden)
 
     model = K.models.Model(inputs=[frame_input],
