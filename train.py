@@ -15,7 +15,7 @@ if __name__ == '__main__':
 
     print("--- STARTING LEARNING PROCESS ---")
 
-    frame_input = K.Input(shape=(128, 128, 3))
+    frame_input = K.Input(shape=(128, 128, 3), name='frame_input')
 
     conv = K.layers.Conv2D(filters=32, kernel_size=6, strides=2, name='conv_1', input_shape=(128, 128, 3), data_format='channels_last')(frame_input)
     conv = K.layers.Conv2D(filters=64, kernel_size=3, strides=2, name='conv_2')(conv)
@@ -31,13 +31,17 @@ if __name__ == '__main__':
 
     model.compile(optimizer='rmsprop', loss=loss_mse_for_known)
 
+    try:
+        K.utils.plot_model(model, show_shapes=True, to_file=MODEL_PREVIEW_PATH)
+    except:
+        pass
+
     history = model.fit([inputs_frame],
                         [labels],
                         epochs=7, verbose=2, validation_split=0.1)
     print(history.history)
 
     model.save(MODEL_SAVE_PATH)
-    K.utils.plot_model(model, to_file='model.png')
 
     print('--- EVALUATING ---')
 
