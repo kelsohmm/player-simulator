@@ -22,7 +22,7 @@ class NeuralNetworkAgent:
         self.target = np.zeros(1, dtype=DATA_DTYPE)
 
     def react_to_new_game_screen(self, screen_shot, score, time):
-        self.save_state(self.possible_keys[0], score, screen, time)
+        self.save_state(self.possible_keys[0], score, screen_shot, time)
 
         predictions = self.predict_rewards()
         best_inputs = map_rewards_to_inputs(predictions)
