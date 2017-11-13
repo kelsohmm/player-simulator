@@ -120,11 +120,11 @@ class VmHost:
     def __init__(self, vm_config, mode='gui'):
         vm_name, snap_name, window_rect = vm_config
         self.session = Session()
-        self._clone_machine(snap_name, vm_name)
+        self._clone_machine(vm_name, snap_name)
         self.window_rect = window_rect
         self.mode = mode
 
-    def _clone_machine(self, snap_name, vm_name):
+    def _clone_machine(self, vm_name, snap_name):
         vbox = VirtualBox()
         self.machine = vbox.find_machine(vm_name).clone(snap_name,
                                                         name=(self.make_cloned_vm_name(snap_name, vm_name)),

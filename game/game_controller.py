@@ -44,7 +44,7 @@ class GameController:
         score = self._get_score(screen_shot)
 
         if self._is_end_game_screen(screen_shot):
-            return "FINISHED", score, None
+            return "FINISHED", score, screen_shot
         else:
             return "IN_PROGRESS", score, screen_shot
 
