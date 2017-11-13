@@ -26,12 +26,17 @@ if __name__ == '__main__':
     concat = K.layers.concatenate([conved_frame, flat_frame])
     hidden = K.layers.Dense(2048, activation='relu', name='hidden_1')(concat)
     hidden = K.layers.Dense(512, activation='relu', name='hidden_2')(hidden)
-    main_output = K.layers.Dense(6, name='main_output')(hidden)
+
+    output_names = ["output_%d" % i for i in range(6)]
+    output_layers = [K.layers.Dense(1, name=name)(
+                        K.layers.Dense(128)(hidden)
+                     )
+                     for name in output_names]
 
     model = K.models.Model(inputs=[frame_input],
-                           outputs=[main_output])
+                           outputs=output_layers)
 
-    model.compile(optimizer='rmsprop', loss=loss_mse_for_known)
+    model.compile(optimizer=K.optimizers.Adamax(lr=0.0005), loss={name: loss_mse_for_known for name in output_names})
 
     try:
         K.utils.plot_model(model, show_shapes=True, to_file=MODEL_PREVIEW_PATH)
@@ -39,8 +44,8 @@ if __name__ == '__main__':
         pass
 
     history = model.fit([inputs_frame],
-                        [labels],
-                        epochs=7, verbose=2, validation_split=0.1)
+                        [labels[:, i] for i in range(6)],
+                        epochs=7, verbose=2, validation_split=0.3)
     print(history.history)
 
     model.save(MODEL_SAVE_PATH)
@@ -48,4 +53,4 @@ if __name__ == '__main__':
     print('--- EVALUATING ---')
 
     print(model.evaluate([inputs_frame],
-                         [labels]))
+                         [labels[:, i] for i in range(6)]))

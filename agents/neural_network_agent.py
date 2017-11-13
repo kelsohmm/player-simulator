@@ -28,7 +28,7 @@ class NeuralNetworkAgent:
         best_inputs = map_rewards_to_inputs(predictions)
 
         self.repo.ammend('inputs', best_inputs)
-        logging.debug('Rewards: %s, Chose: %s', str(predictions.tolist()), str(best_inputs))
+        logging.debug('Rewards: %s, Chose: %s', str(predictions), str(best_inputs))
 
         return best_inputs
 

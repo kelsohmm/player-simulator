@@ -5,8 +5,19 @@ from config import _MARIO_POSSIBLE_MOVES
 DATA_DTYPE = [('conv_input', np.ubyte, (128, 128, 3)),
               ('rewards', np.float32, len(_MARIO_POSSIBLE_MOVES))]
 
+
+def argmax(collection):
+    maxval = collection[0]
+    maxidx = 0
+    for idx in range(1, len(collection)):
+        if collection[idx] > maxval:
+            maxval = collection[idx]
+            maxidx = idx
+    return maxidx
+
+
 def map_rewards_to_inputs(rewards):
-    return _MARIO_POSSIBLE_MOVES[rewards.argmax()]
+    return _MARIO_POSSIBLE_MOVES[argmax(rewards)]
 
 
 def map_rewards_from_inputs(reward, inputs, target):
