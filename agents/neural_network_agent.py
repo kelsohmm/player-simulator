@@ -1,11 +1,17 @@
 import logging
+
+import cv2
 import numpy as np
 import keras
 
+from config import RUN_MODE, PREVIEW_CONV_INPUT
 from data_transformations import map_one_state, DATA_DTYPE, map_rewards_to_inputs
 from image_transformations import resize_128
 from train import loss_mse_for_known
 
+def screen_preview(screen):
+    if RUN_MODE == 'SHOW' and PREVIEW_CONV_INPUT:
+        cv2.imshow("Agent preview", screen)
 
 class NeuralNetworkAgent:
     def __init__(self, model_path, possible_game_inputs, repo):
@@ -38,5 +44,7 @@ class NeuralNetworkAgent:
 
     def predict_rewards(self):
         map_one_state(self.repo.get_commits(), self.target[0])
+
+        screen_preview(self.target[0]['conv_input'])
 
         return self.model.predict([self.target[0]['conv_input'].reshape((1, 128, 128, 3))])

@@ -8,6 +8,7 @@ RUN_MODE = 'SHOW'  # SHOW or COLLECT
 COLLECTING_NO_GAMES = 1
 COLLECTING_AGENT_NAME = 'AGENT_RANDOM'
 
+PREVIEW_CONV_INPUT = True
 
 ### GLOBAL SETTINGS ###
 SAVE_API_VERSION = '1.0'  # TODO: change gamestate_repo saving use savez_compressed
