@@ -32,13 +32,15 @@ def map_one_state(states, target, index=None):
 
 
 def calc_rewards(states):
-    GAMMA = 0.9
+    GAMMA = 0.99
     no_states = len(states)
     rewards = np.zeros((no_states,), dtype=np.float32)
     rewards[no_states - 1] = states[no_states - 1]['score'] - states[no_states - 2]['score']
     for i in reversed(range(0, no_states - 1)):
         prev_score = states[i - 1]['score'] if i > 0 else 0.0
-        rewards[i] = states[i]['score'] - prev_score + (GAMMA * rewards[i + 1])
+        current_score = states[i]['score'] - prev_score
+        score = 1.0 if current_score > 0.0 else 0.0
+        rewards[i] = score + (GAMMA * rewards[i + 1])
     return rewards
 
 
