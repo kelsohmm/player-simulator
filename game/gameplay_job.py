@@ -3,6 +3,12 @@ import logging
 
 import time
 
+import cv2
+
+
+def resize_128(image):
+    return cv2.resize(image, (128, 128))
+
 
 class GameplayJob:
     _MAX_GAME_TIME_MINUTES = 5
@@ -17,6 +23,7 @@ class GameplayJob:
             self._start_environment()
             for i in itertools.count():
                 state, score, screen = self.controller.get_game_state()
+                screen = resize_128(screen)
                 game_time = time.time() - self.start_time
 
                 if self.max_time_exceeded(game_time):

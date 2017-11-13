@@ -6,7 +6,6 @@ import keras
 
 from config import RUN_MODE, PREVIEW_CONV_INPUT
 from data_transformations import map_one_state, DATA_DTYPE, map_rewards_to_inputs
-from image_transformations import resize_128
 from train import loss_mse_for_known
 
 def screen_preview(screen):
@@ -23,7 +22,6 @@ class NeuralNetworkAgent:
         self.target = np.zeros(1, dtype=DATA_DTYPE)
 
     def react_to_new_game_screen(self, screen_shot, score, time):
-        screen = resize_128(screen_shot)
         self.save_state(self.possible_keys[0], score, screen, time)
 
         predictions = self.predict_rewards()
