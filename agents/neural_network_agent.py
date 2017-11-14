@@ -45,4 +45,5 @@ class NeuralNetworkAgent:
 
         screen_preview(self.target[0]['conv_input'])
 
-        return self.model.predict([self.target[0]['conv_input'].reshape((1, 128, 128, 3))])
+        raw_predicts = self.model.predict([self.target[0]['conv_input'].reshape((1, 128, 128, 3))])
+        return np.concatenate(raw_predicts).flatten()
