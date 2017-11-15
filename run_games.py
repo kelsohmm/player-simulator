@@ -6,7 +6,6 @@ from agents.agent_factory import agent_factory
 from config import *
 from game.game_controller import GameController
 from game.gameplay_job import GameplayJob
-from game.gameplay_job_factory import create_vm_game_job
 from game.vm_host import VmHost
 
 freeze_support()
