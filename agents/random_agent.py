@@ -7,7 +7,7 @@ class RandomAgent:
 
     def react_to_new_game_screen(self, screen_shot, score, time):
         inputs = random.choice(self.possible_keys)
-        self.repo.commit(screen, score, inputs, time)
+        self.repo.commit(screen_shot, score, inputs, time)
 
         return inputs
 

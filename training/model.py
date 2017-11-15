@@ -1,18 +1,14 @@
 import tensorflow as tf
 import keras as K
+from config import MODEL_PREVIEW_PATH
+
 
 def loss_mse_for_known(y_true, y_pred):
     replaced = tf.where(tf.is_nan(y_true), y_pred, y_true)
     return K.backend.mean(K.backend.square(replaced - y_pred), axis=-1)
 
-if __name__ == '__main__':
-    import numpy as np
-    from config import DATA_SAVE_PATH, MODEL_SAVE_PATH, MODEL_PREVIEW_PATH
 
-    loaded = np.load(DATA_SAVE_PATH)
-    inputs_frame = loaded['inputs_frame']
-    labels = loaded['labels']
-
+def create_network():
     print("--- STARTING LEARNING PROCESS ---")
 
     frame_input = K.Input(shape=(128, 128, 3), name='frame_input')
@@ -36,21 +32,11 @@ if __name__ == '__main__':
     model = K.models.Model(inputs=[frame_input],
                            outputs=output_layers)
 
-    model.compile(optimizer=K.optimizers.Adamax(lr=0.0005), loss={name: loss_mse_for_known for name in output_names})
+    model.compile(optimizer=K.optimizers.Adam(), loss={name: loss_mse_for_known for name in output_names})
 
     try:
         K.utils.plot_model(model, show_shapes=True, to_file=MODEL_PREVIEW_PATH)
     except:
         pass
 
-    history = model.fit([inputs_frame],
-                        [labels[:, i] for i in range(6)],
-                        epochs=7, verbose=2, validation_split=0.3)
-    print(history.history)
-
-    model.save(MODEL_SAVE_PATH)
-
-    print('--- EVALUATING ---')
-
-    print(model.evaluate([inputs_frame],
-                         [labels[:, i] for i in range(6)]))
+    return model

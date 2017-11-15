@@ -1,12 +1,13 @@
 import logging
 
 import cv2
-import numpy as np
 import keras
+import numpy as np
 
 from config import RUN_MODE, PREVIEW_CONV_INPUT
 from data_transformations import map_one_state, DATA_DTYPE, map_rewards_to_inputs
-from train import loss_mse_for_known
+from training.model import loss_mse_for_known
+
 
 def screen_preview(screen):
     if RUN_MODE == 'SHOW' and PREVIEW_CONV_INPUT:
