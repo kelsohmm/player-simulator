@@ -37,7 +37,11 @@ class GameplayJob:
                     inputs = self.agent.react_to_new_game_screen(screen, score, game_time)
                     self.controller.set_active_keys(inputs)
         finally:
-            self._stop_environment()
+            try:
+                self._stop_environment()
+            except:
+                logging.warning("Environment failed to stop, might leave leaked resources")
+
 
     def _stop_environment(self):
         logging.info("Stopping game environment")
