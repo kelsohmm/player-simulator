@@ -1,12 +1,8 @@
 import logging
-
 import cv2
-import keras
 import numpy as np
-
-from config import RUN_MODE, PREVIEW_CONV_INPUT
+from config import RUN_MODE, PREVIEW_CONV_INPUT, MODEL_SAVE_PATH
 from data_transformations import map_one_state, DATA_DTYPE, map_rewards_to_inputs
-from training.model import loss_mse_for_known
 
 
 def screen_preview(screen):
@@ -37,6 +33,7 @@ class NeuralNetworkAgent:
             self.repo.commit(screen, score, best_inputs, time)
 
     def finish(self, screen_shot, score):
+        self.model.save(MODEL_SAVE_PATH)
         if not self.repo is None:
             self.repo.close()
 
