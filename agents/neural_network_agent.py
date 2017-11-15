@@ -14,9 +14,8 @@ def screen_preview(screen):
         cv2.imshow("Agent preview", screen)
 
 class NeuralNetworkAgent:
-    def __init__(self, model_path, possible_game_inputs, repo):
-        logging.info("--- INITIALIZING NN AGENT FROM MODEL PATH: %s", model_path)
-        self.model = keras.models.load_model(model_path, custom_objects={'loss_mse_for_known': loss_mse_for_known})
+    def __init__(self, model, possible_game_inputs, repo):
+        self.model = model
         self.repo = repo
         self.inputs_keys = np.asarray(possible_game_inputs, dtype=np.uint8)
         self.possible_keys = possible_game_inputs
