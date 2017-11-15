@@ -13,19 +13,14 @@ if __name__ == '__main__':
     NO_GAMES = COLLECTING_NO_GAMES
     MODE = 'headless'  # 'headless' or 'gui'
     AGENT_NAME = COLLECTING_AGENT_NAME
-    SAVING = True
 
     if RUN_MODE == 'SHOW':
         NO_GAMES = 1
         MODE = 'gui'  # 'headless' or 'gui'
         AGENT_NAME = 'AGENT_NN'
-        SAVING = False
 
-    save_path = None
-    if SAVING:
-        save_path = os.path.join(DUMPS_DIR, AGENT_NAME + '_' + datetime.datetime.now().strftime("%Y%m%d-%H%M%S"))
-        if not os.path.exists(save_path):
-            os.makedirs(save_path)
+    save_path = os.path.join(DUMPS_DIR, AGENT_NAME + '_' + datetime.datetime.now().strftime("%Y%m%d-%H%M%S"))
+    os.makedirs(save_path)
 
     model = None
     if AGENT_NAME == 'AGENT_NN':
