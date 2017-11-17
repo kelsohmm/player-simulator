@@ -1,5 +1,4 @@
 import logging
-import pytesseract
 from PIL import Image
 from scipy import misc
 import cv2
@@ -41,7 +40,7 @@ class GameController:
 
     def get_game_state(self):
         screen_shot = self.host.take_screen_shot()
-        score = self._get_score(screen_shot)
+        score = 0
 
         if self._is_end_game_screen(screen_shot):
             return "FINISHED", score, screen_shot
@@ -76,28 +75,3 @@ class GameController:
             if key_activity_array[i] == 1 or key_activity_array[i] == True:
                 active_keys.append(self.key_activity_mapping[i])
         return active_keys
-
-    def _get_score(self, screen_shot):
-        x_left, y_top, x_right, y_bottom = self.score_rect
-        score_screen = screen_shot[y_top:y_bottom, x_left:x_right, :]
-        score_digits = self._read_digits_from_screen(score_screen)
-        return self._convert_to_score_with_checks(score_digits)
-
-    def _convert_to_score_with_checks(self, score_digits):
-        try:
-            new_score = int(score_digits)
-            if new_score >= self.last_score \
-                    and new_score - self.last_score < self.MAX_SCORE_JUMP:  # TODO: kontrola zaufania wyniku, np 3 klatki w przod podobny zamiast jump
-                self.last_score = new_score
-            else:
-                logging.warning('Discarding new score, value: %d', new_score)
-        finally:
-            return self.last_score
-
-    def _read_digits_from_screen(self, score_screen):
-        score_bw = cv2.cvtColor(score_screen, cv2.COLOR_RGB2GRAY)
-        (thresh, score_tresh) = cv2.threshold(score_bw, 10, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)
-        score_img = Image.fromarray(score_tresh)
-        score_text = pytesseract.image_to_string(score_img, config="--psm 7")
-        score_digits = ''.join(i for i in score_text if i.isdigit())
-        return score_digits
