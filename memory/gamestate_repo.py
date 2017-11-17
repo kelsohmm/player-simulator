@@ -1,11 +1,12 @@
 import numpy as np
-import os
 from config import GLOB_JOB_ID
+from data_transformations import map_action_idx_from_inputs
+from memory.gamestate_database import GamestateDatabase
 
 
 class GamestateRepo:
     def __init__(self, file_path, inputs_len):
-        self.file_path = file_path
+        self.db = GamestateDatabase(file_path)
         self.matrix = np.zeros(1, dtype=[('screen', np.ubyte, (128, 128, 3)),
                                          ('score',np.int16),
                                          ('inputs', np.ubyte, inputs_len),
@@ -27,9 +28,17 @@ class GamestateRepo:
         self.commits.append(self.matrix.copy())
 
     def close(self):
-        if self.file_path is not None:
-            file = open(os.path.join(self.file_path, GLOB_JOB_ID.job_id + '.npy'), 'w+b')
-            for commit in self.commits:
-                np.save(file, commit)
-            file.close()
+        transitions = []
+        last_idx = len(self.commits) - 1
+        for idx in range(1, len(self.commits)):
+            prev_commit = self.commits[idx-1]
+            curr_commit = self.commits[idx]
+            transitions.append((
+                GLOB_JOB_ID.job_id,
+                idx-1,
+                prev_commit['screen'].tostring(),
+                map_action_idx_from_inputs(prev_commit['inputs']),
+                curr_commit['score'] - prev_commit['score'],
+                curr_commit['screen'].tostring() if idx != last_idx else None
+            ))
 

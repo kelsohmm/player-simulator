@@ -19,6 +19,8 @@ def argmax(collection):
 def map_rewards_to_inputs(rewards):
     return _MARIO_POSSIBLE_MOVES[argmax(rewards)]
 
+def map_action_idx_from_inputs(inputs):
+    return _MARIO_POSSIBLE_MOVES.index(inputs.tolist()[0])
 
 def map_rewards_from_inputs(reward, inputs, target):
     target[:] = np.nan
