@@ -1,5 +1,4 @@
-from agents.gamestate_repo import GamestateRepo
-from config import MODEL_SAVE_PATH
+from memory.gamestate_repo import GamestateRepo
 
 def _createNNAgent(possible_keys, repo, model):
     from agents.neural_network_agent import NeuralNetworkAgent
