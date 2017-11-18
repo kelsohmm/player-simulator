@@ -7,7 +7,7 @@ def _createNNAgent(possible_keys, repo, model):
 def agent_factory(agent_name, possible_keys, save_path, model):
     from agents.random_agent import RandomAgent
 
-    repo = GamestateRepo(save_path, len(possible_keys[0]))
+    repo = GamestateRepo(save_path)
 
     return {
         'AGENT_RANDOM': lambda: RandomAgent(possible_keys, repo),
