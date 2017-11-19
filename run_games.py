@@ -6,7 +6,7 @@ from config import *
 from game.game_controller import GameController
 from game.gameplay_job import GameplayJob
 from game.vm_host import VmHost
-from training.model import loss_mse_for_known
+from training.model import loss_mse_for_known, create_network
 
 freeze_support()
 if __name__ == '__main__':
@@ -25,7 +25,7 @@ if __name__ == '__main__':
     model = None
     if AGENT_NAME == 'AGENT_NN':
         import keras
-        model = keras.models.load_model(MODEL_SAVE_PATH, custom_objects={'loss_mse_for_known': loss_mse_for_known})
+        model = create_network()
 
     for game_num in range(NO_GAMES):
         vm_config, controller_config, possible_moves = MARIO_CONFIG
