@@ -1,6 +1,11 @@
 import itertools
 import logging
 import gym
+
+gym.envs.register(
+    id='SuperMarioBros-1-1-v0',
+    entry_point='ppaquette_gym_super_mario:MetaSuperMarioBrosEnv',
+)
 import gym_pull
 import time
 import cv2

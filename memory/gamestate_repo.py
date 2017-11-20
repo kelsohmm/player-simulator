@@ -25,7 +25,6 @@ class GamestateRepo:
 
     def commit(self, screen, score, inputs, _time):
         if self.prev_screen is not None:
-            print(np.count_nonzero(self.prev_screen))
             self.last_transition = (
                 GLOB_JOB_ID.job_id,
                 self._postincremented_commit_number(),

@@ -2,7 +2,7 @@ import logging
 import cv2
 import numpy as np
 from config import RUN_MODE, PREVIEW_CONV_INPUT, MODEL_SAVE_PATH
-from data_transformations import map_one_state, DATA_DTYPE, map_rewards_to_inputs
+from data_transformations import map_rewards_to_inputs
 
 
 def screen_preview(screen):

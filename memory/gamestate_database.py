@@ -1,5 +1,6 @@
 import random
 import sqlite3
+from sqlite3 import Binary
 import os
 
 _DATABASE_SCHEMA = '''CREATE TABLE transitions
@@ -34,7 +35,7 @@ class GamestateDatabase:
         self.db_size += 1
         self.games_duration[game_id] += 1
         self.cursor.execute('INSERT INTO transitions VALUES (?,?,?,?,?,?)',
-                            (game_id, time, curr_state, action_idx, reward, next_state))
+                            (game_id, time, Binary(curr_state), action_idx, reward, Binary(next_state)))
         self.conn.commit()
 
     def _random_game_time(self, game_id):

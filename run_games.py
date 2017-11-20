@@ -4,7 +4,7 @@ import config
 from agents.agent_factory import agent_factory
 from config import *
 from game.gameplay_job import GameplayJob
-from training.model import loss_mse_for_known, create_network
+from training.model import create_network
 
 freeze_support()
 if __name__ == '__main__':
