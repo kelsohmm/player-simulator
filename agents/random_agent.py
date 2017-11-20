@@ -6,10 +6,10 @@ class RandomAgent:
         self.repo = repo
 
     def react_to_new_game_screen(self, screen_shot, score, time):
-        inputs = random.choice(self.possible_keys)
-        self.repo.commit(screen_shot, score, inputs, time)
+        action_idx = random.randint(0, len(self.possible_keys)-1)
+        self.repo.commit(screen_shot, score, action_idx, time)
 
-        return inputs
+        return action_idx
 
     def finish(self, screen_shot, score):
         self.repo.close()

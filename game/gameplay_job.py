@@ -1,8 +1,8 @@
 import itertools
 import logging
-
+import gym
+import gym_pull
 import time
-
 import cv2
 
 
@@ -13,44 +13,37 @@ def resize_128(image):
 class GameplayJob:
     _MAX_GAME_TIME_MINUTES = 5
 
-    def __init__(self, environment, controller, agent):
-        self.environment = environment
-        self.controller = controller
+    def __init__(self, agent):
+        self.env = gym.make('SuperMarioBros-1-1-v0')
         self.agent = agent
+        self.start_time = time.time()
 
     def run(self):
-        try:
-            self._start_environment()
-            for i in itertools.count():
-                state, score, screen = self.controller.get_game_state()
-                screen = resize_128(screen)
-                game_time = time.time() - self.start_time
+        screen = self.env.reset()
+        score = 0
+        done = False
+        for i in itertools.count():
+            screen = resize_128(screen)
 
-                if self.max_time_exceeded(game_time):
-                    state = 'FINISHED'
-                logging.debug("Iter: %d, State: %s, Score: %d, Time: %d", i, state, score, int(game_time))
+            game_time = time.time() - self.start_time
+            if self.max_time_exceeded(game_time):
+                done = True
 
-                if state == 'FINISHED':
-                    self.agent.finish(score, screen)
-                    break
-                else:
-                    inputs = self.agent.react_to_new_game_screen(screen, score, game_time)
-                    self.controller.set_active_keys(inputs)
-        finally:
-            try:
-                self._stop_environment()
-            except:
-                logging.warning("Environment failed to stop, might leave leaked resources")
+            logging.debug("Iter: %d, Score: %d, Time: %d", i, score, int(game_time))
+
+            if done:
+                self.agent.finish(score, screen)
+                break
+            else:
+                action = self.agent.react_to_new_game_screen(screen, score, game_time)
+                screen, score, done, _ = self.env.step(action)
 
 
     def _stop_environment(self):
-        logging.info("Stopping game environment")
-        self.environment.stop()
+        logging.info("Stopping game job")
 
     def _start_environment(self):
-        logging.info("Starting game environment")
-        self.environment.start()
-        logging.info("Game environment up and running")
+        logging.info("New game started")
         self.start_time = time.time()
 
     def max_time_exceeded(self, game_time):
