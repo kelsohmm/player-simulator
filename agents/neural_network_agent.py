@@ -1,4 +1,6 @@
 import logging
+import random
+
 import cv2
 import numpy as np
 from config import RUN_MODE, PREVIEW_CONV_INPUT, MODEL_SAVE_PATH
@@ -19,24 +21,26 @@ class NeuralNetworkAgent:
         self.possible_keys = possible_game_inputs
         self.frame_target = np.zeros((1, 128, 128, 1), dtype=np.ubyte)
 
-    def react_to_new_game_screen(self, screen_shot, score, time):
+    def react_to_new_game_screen(self, screen_shot, score):
         screen_shot = cv2.cvtColor(screen_shot, cv2.COLOR_RGB2GRAY).reshape((128, 128, 1))
         predictions = self.predict_rewards(screen_shot)
-        best_inputs = map_rewards_to_inputs(predictions)
-        self.save_state(best_inputs, score, screen_shot, time)
+        action_idx = self._choose_action_idx(predictions)
+        self.repo.commit(screen_shot, score, action_idx)
 
         loss = 0
-        if self.repo.size() > 0:
+        if self.repo.size() > 10:
             memories = [self.repo.get_last_commit()] + self.repo.get_random_commits(self.BATCH_SIZE)
             samples, labels = self._map_memories_to_train_data(memories)
             loss = self.model.train_on_batch(samples, np.split(labels, 6, axis=1))
 
-        logging.debug('Rewards: %s, Chose: %s, Loss: %s', str(predictions), str(best_inputs), str(loss))
-        return best_inputs
+        logging.debug('Rewards: %s, Chose: %s, Loss: %s', str(predictions), str(self.possible_keys[action_idx]), str(loss))
+        return action_idx
 
-    def save_state(self, best_inputs, score, screen, time):
-        if not self.repo is None:
-            self.repo.commit(screen, score, best_inputs, time)
+    def _choose_action_idx(self, predictions):
+        if random.uniform(0., 1.) < 0.05:
+            return random.randint(0, 5)
+        else:
+            return predictions.argmax()
 
     def finish(self, screen_shot, score):
         self.model.save(MODEL_SAVE_PATH)

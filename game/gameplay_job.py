@@ -1,15 +1,8 @@
 import itertools
 import logging
-import gym
-
-gym.envs.register(
-    id='SuperMarioBros-1-1-v0',
-    entry_point='ppaquette_gym_super_mario:MetaSuperMarioBrosEnv',
-)
-import gym_pull
 import time
 import cv2
-
+from config import _MARIO_POSSIBLE_MOVES
 
 def resize_128(image):
     return cv2.resize(image, (128, 128))
@@ -18,38 +11,24 @@ def resize_128(image):
 class GameplayJob:
     _MAX_GAME_TIME_MINUTES = 5
 
-    def __init__(self, agent):
-        self.env = gym.make('SuperMarioBros-1-1-v0')
+    def __init__(self, agent, env):
+        self.env = env
         self.agent = agent
         self.start_time = time.time()
 
     def run(self):
-        screen = self.env.reset()
-        score = 0
-        done = False
+        action_idx = 0
+        start_time = time.time()
         for i in itertools.count():
+            screen, score, done, _ = self.env.step(_MARIO_POSSIBLE_MOVES[action_idx])
             screen = resize_128(screen)
+            action_idx = self.agent.react_to_new_game_screen(screen, score)
 
-            game_time = time.time() - self.start_time
-            if self.max_time_exceeded(game_time):
-                done = True
-
+            game_time = time.time() - start_time
             logging.debug("Iter: %d, Score: %d, Time: %d", i, score, int(game_time))
-
-            if done:
+            if done or self.max_time_exceeded(game_time):
                 self.agent.finish(score, screen)
                 break
-            else:
-                action = self.agent.react_to_new_game_screen(screen, score, game_time)
-                screen, score, done, _ = self.env.step(action)
-
-
-    def _stop_environment(self):
-        logging.info("Stopping game job")
-
-    def _start_environment(self):
-        logging.info("New game started")
-        self.start_time = time.time()
 
     def max_time_exceeded(self, game_time):
         return game_time / 60. > self._MAX_GAME_TIME_MINUTES

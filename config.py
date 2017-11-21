@@ -5,7 +5,7 @@ import os
 
 RUN_MODE = 'SHOW'  # SHOW or COLLECT
 
-COLLECTING_NO_GAMES = 1
+COLLECTING_NO_GAMES = 100
 COLLECTING_AGENT_NAME = 'AGENT_RANDOM'
 
 PREVIEW_CONV_INPUT = RUN_MODE == 'SHOW' and True
@@ -30,8 +30,20 @@ DATA_SAVE_PATH = os.path.join(DUMPS_DIR, 'data.npz')
 MODEL_PREVIEW_PATH = os.path.join(DUMPS_DIR, 'model_preview.png')
 
 
-### VM_CONFIGS ###
-# format: (VM_NAME, SNAPSHOT_NAME, WINDOW_RECT(window_width, window_height, window_x, window_y))
-
-_MARIO_POSSIBLE_MOVES = [[0, 0, 0], [0, 0, 1], [0, 1, 0], [1, 0, 0], [0, 0, 1], [1, 1, 0]]
+_MARIO_POSSIBLE_MOVES = [
+    [0, 0, 0, 0, 0, 0],  # NOOP
+    # [1, 0, 0, 0, 0, 0],  # Up
+    # [0, 0, 1, 0, 0, 0],  # Down
+    [0, 1, 0, 0, 0, 0],  # Left
+    [0, 1, 0, 0, 1, 0],  # Left + A
+    # [0, 1, 0, 0, 0, 1],  # Left + B
+    # [0, 1, 0, 0, 1, 1],  # Left + A + B
+    [0, 0, 0, 1, 0, 0],  # Right
+    [0, 0, 0, 1, 1, 0],  # Right + A
+    # [0, 0, 0, 1, 0, 1],  # Right + B
+    # [0, 0, 0, 1, 1, 1],  # Right + A + B
+    [0, 0, 0, 0, 1, 0],  # A
+    # [0, 0, 0, 0, 0, 1],  # B
+    # [0, 0, 0, 0, 1, 1],  # A + B
+]
 MARIO_CONFIG = (_MARIO_POSSIBLE_MOVES)

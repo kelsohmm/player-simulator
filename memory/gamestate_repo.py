@@ -1,6 +1,5 @@
 import numpy as np
 from config import GLOB_JOB_ID
-from data_transformations import map_action_idx_from_inputs
 from memory.gamestate_database import GamestateDatabase
 
 
@@ -23,7 +22,7 @@ class GamestateRepo:
         return list(map(self._memory_from_commit,
                         self.db.fetch_random_batch(batch_size)))
 
-    def commit(self, screen, score, inputs, _time):
+    def commit(self, screen, score, action_idx):
         if self.prev_screen is not None:
             self.last_transition = (
                 GLOB_JOB_ID.job_id,
@@ -35,7 +34,7 @@ class GamestateRepo:
             )
             self.db.insert_transition(*self.last_transition)
 
-        self._update_prevs(screen, score, inputs)
+        self._update_prevs(screen, score, action_idx)
 
     def close(self):
         self.last_transition = (
@@ -56,10 +55,10 @@ class GamestateRepo:
         return np.fromstring(screen_text, dtype=np.ubyte).reshape((128, 128, 1)) \
             if screen_text is not None else None
 
-    def _update_prevs(self, screen, score, inputs):
+    def _update_prevs(self, screen, score, action_idx):
         self.prev_screen = screen
         self.prev_score = score
-        self.prev_action_idx = map_action_idx_from_inputs(inputs)
+        self.prev_action_idx = action_idx
 
     def _postincremented_commit_number(self):
         self.commit_number += 1
