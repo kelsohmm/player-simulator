@@ -19,14 +19,16 @@ class GameplayJob:
     def run(self):
         action_idx = 0
         start_time = time.time()
+        screen = score = done = None
         for i in itertools.count():
-            screen, score, done, _ = self.env.step(_MARIO_POSSIBLE_MOVES[action_idx])
+            for _ in range(3):
+                screen, score, done, _ = self.env.step(_MARIO_POSSIBLE_MOVES[action_idx])
             screen = resize_128(screen)
             action_idx = self.agent.react_to_new_game_screen(screen, score)
 
             game_time = time.time() - start_time
             logging.debug("Iter: %d, Score: %d, Time: %d", i, score, int(game_time))
-            if done or self.max_time_exceeded(game_time):
+            if done:
                 self.agent.finish(score, screen)
                 break
 

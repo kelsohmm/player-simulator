@@ -26,8 +26,10 @@ if __name__ == '__main__':
         model = create_network()
 
     agent = agent_factory(AGENT_NAME, MARIO_CONFIG, save_path, model)
+    env = make_env()
     for game_num in range(NO_GAMES):
+        env.reset()
         config.GLOB_JOB_ID.set(game_num)
 
-        GameplayJob(agent, make_env()).run()
+        GameplayJob(agent, env).run()
 

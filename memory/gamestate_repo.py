@@ -29,7 +29,7 @@ class GamestateRepo:
                 self._postincremented_commit_number(),
                 self.prev_screen.tostring(),
                 self.prev_action_idx,
-                score - self.prev_score,
+                self.prev_score,
                 screen.tostring()
             )
             self.db.insert_transition(*self.last_transition)
