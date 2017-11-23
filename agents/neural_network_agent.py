@@ -1,10 +1,8 @@
 import logging
 import random
-
 import cv2
 import numpy as np
 from config import RUN_MODE, PREVIEW_CONV_INPUT, MODEL_SAVE_PATH
-from data_transformations import map_rewards_to_inputs
 
 
 def screen_preview(screen):
@@ -28,8 +26,8 @@ class NeuralNetworkAgent:
         self.repo.commit(screen_shot, score, action_idx)
 
         loss = 0
-        if self.repo.size() > 10:
-            memories = [self.repo.get_last_commit()] + self.repo.get_random_commits(self.BATCH_SIZE)
+        if self.repo.size() > 10000:
+            memories = self.repo.get_commits_batch_with_last(self.BATCH_SIZE)
             samples, labels = self._map_memories_to_train_data(memories)
             loss = self.model.train_on_batch(samples, np.split(labels, 6, axis=1))
 
@@ -37,7 +35,7 @@ class NeuralNetworkAgent:
         return action_idx
 
     def _choose_action_idx(self, predictions):
-        if random.uniform(0., 1.) < 0.05:
+        if random.uniform(0., 1.) < 0.05 or self.repo.size() < 10000:
             return random.randint(0, 5)
         else:
             return predictions.argmax()

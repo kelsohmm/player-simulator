@@ -15,12 +15,10 @@ class GamestateRepo:
     def size(self):
         return self.db.size()
 
-    def get_last_commit(self):
-        return self._memory_from_commit(self.last_transition)
-
-    def get_random_commits(self, batch_size):
+    def get_commits_batch_with_last(self, batch_size):
+        _, _, _, action_idx, _, _ = self.last_transition
         return list(map(self._memory_from_commit,
-                        self.db.fetch_random_batch(batch_size)))
+                        [self.last_transition] + self.db.fetch_random_batch(batch_size, action_idx)))
 
     def commit(self, screen, score, action_idx):
         if self.prev_screen is not None:
