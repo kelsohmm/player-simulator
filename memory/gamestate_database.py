@@ -26,7 +26,7 @@ class GamestateDatabase:
         return self.db_size
 
     def fetch_random_batch(self, batch_size, action_idx):
-        return self.cursor.execute('SELECT * FROM transitions WHERE action_idx=? ORDER BY RANDOM() LIMIT %d' % batch_size, action_idx)
+        return self.cursor.execute('SELECT * FROM transitions WHERE action_idx=%d ORDER BY RANDOM() LIMIT %d' % (batch_size, action_idx))
 
     def insert_transition(self, game_id, time, curr_state, action_idx, reward, next_state):
         if game_id not in self.games_duration:
@@ -34,8 +34,10 @@ class GamestateDatabase:
 
         self.db_size += 1
         self.games_duration[game_id] += 1
+        curr_state = Binary(curr_state)
+        next_state = Binary(next_state) if next_state is not None else None
         self.cursor.execute('INSERT INTO transitions VALUES (?,?,?,?,?,?)',
-                            (game_id, time, Binary(curr_state), action_idx, reward, Binary(next_state)))
+                            (game_id, time, curr_state, action_idx, reward, next_state))
         self.conn.commit()
 
     def _random_game_time(self, game_id):

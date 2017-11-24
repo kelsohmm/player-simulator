@@ -26,7 +26,7 @@ class NeuralNetworkAgent:
         self.repo.commit(screen_shot, score, action_idx)
 
         loss = 0
-        if self.repo.size() > 10000:
+        if self.repo.size() > 1000:
             memories = self.repo.get_commits_batch_with_last(self.BATCH_SIZE)
             samples, labels = self._map_memories_to_train_data(memories)
             loss = self.model.train_on_batch(samples, np.split(labels, 6, axis=1))
