@@ -2,7 +2,7 @@ import logging
 import random
 import cv2
 import numpy as np
-from config import RUN_MODE, PREVIEW_CONV_INPUT, MODEL_SAVE_PATH, CONV_SHAPE
+from config import RUN_MODE, PREVIEW_CONV_INPUT, MODEL_SAVE_PATH, CONV_SHAPE, DISCOUNT_FACTOR
 
 
 def screen_preview(screen):
@@ -54,7 +54,7 @@ class NeuralNetworkAgent:
         for idx in range(no_memories):
             prev_screen, action_idx, reward, next_screen = memories[idx]
             samples[idx] = prev_screen
-            labels[idx, action_idx] = reward + self._highest_reward(next_screen)
+            labels[idx, action_idx] = reward + (DISCOUNT_FACTOR * self._highest_reward(next_screen))
         return samples, labels
 
     def _highest_reward(self, next_screen):
