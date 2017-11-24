@@ -38,7 +38,7 @@ class Repo:
         self.last_transition = (
             GLOB_JOB_ID.job_id,
             self._postincremented_commit_number(),
-            self.prev_screen.tostring(),
+            self.prev_screen.as_matrix().tostring(),
             self.prev_action_idx,
             self.END_GAME_REWARD,
             None

@@ -19,12 +19,12 @@ class NeuralNetworkAgent:
         self.possible_keys = possible_game_inputs
 
     def react_to_new_game_screen(self, state, score):
-        predictions = self.predict_rewards(state)
+        predictions = self.predict_rewards(state.as_matrix())
         action_idx = self._choose_action_idx(predictions)
         self.repo.commit(state, score, action_idx)
 
         loss = 0
-        if self.repo.size() > 1000:
+        if self.repo.size() > 100:
             memories = self.repo.get_commits_batch_with_last(self.BATCH_SIZE)
             samples, labels = self._map_memories_to_train_data(memories)
             loss = self.model.train_on_batch(samples, np.split(labels, 6, axis=1))
@@ -43,7 +43,7 @@ class NeuralNetworkAgent:
         self.repo.close()
 
     def predict_rewards(self, state):
-        raw_predicts = self.model.predict(state.as_matrix().reshape((1,) + CONV_SHAPE))
+        raw_predicts = self.model.predict(state.reshape((1,) + CONV_SHAPE))
         return np.concatenate(raw_predicts).flatten()
 
     def _map_memories_to_train_data(self, memories):
