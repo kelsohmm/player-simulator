@@ -2,7 +2,7 @@ import logging
 import random
 import cv2
 import numpy as np
-from config import RUN_MODE, PREVIEW_CONV_INPUT, MODEL_SAVE_PATH, CONV_SHAPE, DISCOUNT_FACTOR
+from config import RUN_MODE, PREVIEW_CONV_INPUT, BATCH_SIZE, CONV_SHAPE, DISCOUNT_FACTOR
 
 
 def screen_preview(screen):
@@ -11,8 +11,6 @@ def screen_preview(screen):
 
 
 class NeuralNetworkAgent:
-    BATCH_SIZE = 50
-
     def __init__(self, model, possible_game_inputs, repo):
         self.model = model
         self.repo = repo
@@ -31,7 +29,7 @@ class NeuralNetworkAgent:
     def train_model(self, model, repo):
         loss = 0
         if repo.size() > 100:
-            memories = repo.get_commits_batch_with_last(self.BATCH_SIZE)
+            memories = repo.get_commits_batch_with_last(BATCH_SIZE)
             samples, labels = self._map_memories_to_train_data(memories)
             loss = model.train_on_batch(samples, np.split(labels, 6, axis=1))
         return loss
