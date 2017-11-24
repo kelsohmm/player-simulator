@@ -1,12 +1,9 @@
 import itertools
 import logging
 import time
-import cv2
-from config import _MARIO_POSSIBLE_MOVES, FRAME_SIZE
+from config import _MARIO_POSSIBLE_MOVES, FRAMES_STACKED
+from game.state import State
 
-
-def resize(image):
-    return cv2.resize(image, FRAME_SIZE)
 
 class GameplayJob:
     _MAX_GAME_TIME_MINUTES = 5
@@ -19,18 +16,22 @@ class GameplayJob:
     def run(self):
         action_idx = 0
         start_time = time.time()
-        screen = score = done = None
         for i in itertools.count():
-            for _ in range(3):
-                screen, reward, done, info = self.env.step(_MARIO_POSSIBLE_MOVES[action_idx])
-            screen = resize(screen)
-            action_idx = self.agent.react_to_new_game_screen(screen, score)
+            state, reward, done, info = self.repeat_action(action_idx)
+            action_idx = self.agent.react_to_new_game_screen(state, reward)
 
-            game_time = time.time() - start_time
-            logging.debug("Iter: %d, Score: %d, Time: %d", i, score, int(game_time))
+            logging.debug("Iter: %d, Score: %f, Time: %d", i, reward, int(time.time() - start_time))
             if done:
-                self.agent.finish(score, screen)
+                self.agent.finish(reward, state)
                 break
 
-    def max_time_exceeded(self, game_time):
-        return game_time / 60. > self._MAX_GAME_TIME_MINUTES
+    def repeat_action(self, action_idx):
+        done = info = None
+        accumulated_reward = 0
+        state = State()
+        for _ in range(FRAMES_STACKED):
+            screen, reward, done, info = self.env.step(_MARIO_POSSIBLE_MOVES[action_idx])
+            accumulated_reward += reward
+            state.append(screen)
+
+        return state, accumulated_reward, done, info

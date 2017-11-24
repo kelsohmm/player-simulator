@@ -17,13 +17,11 @@ class NeuralNetworkAgent:
         self.model = model
         self.repo = repo
         self.possible_keys = possible_game_inputs
-        self.frame_target = np.zeros((1,)+CONV_SHAPE, dtype=np.ubyte)
 
-    def react_to_new_game_screen(self, screen_shot, score):
-        screen_shot = cv2.cvtColor(screen_shot, cv2.COLOR_RGB2GRAY).reshape(CONV_SHAPE)
-        predictions = self.predict_rewards(screen_shot)
+    def react_to_new_game_screen(self, state, score):
+        predictions = self.predict_rewards(state)
         action_idx = self._choose_action_idx(predictions)
-        self.repo.commit(screen_shot, score, action_idx)
+        self.repo.commit(state, score, action_idx)
 
         loss = 0
         if self.repo.size() > 1000:
@@ -40,19 +38,17 @@ class NeuralNetworkAgent:
         else:
             return predictions.argmax()
 
-    def finish(self, screen_shot, score):
+    def finish(self, state, score):
         self.model.save(MODEL_SAVE_PATH)
-        if not self.repo is None:
-            self.repo.close()
+        self.repo.close()
 
-    def predict_rewards(self, screen):
-        self.frame_target[0] = screen
-        raw_predicts = self.model.predict(self.frame_target)
+    def predict_rewards(self, state):
+        raw_predicts = self.model.predict(state.as_matrix().reshape((1,) + CONV_SHAPE))
         return np.concatenate(raw_predicts).flatten()
 
     def _map_memories_to_train_data(self, memories):
         no_memories = len(memories)
-        samples = np.zeros((no_memories, 128, 128, 1), dtype=np.ubyte)
+        samples = np.zeros((no_memories,) + CONV_SHAPE, dtype=np.ubyte)
         labels = np.zeros((no_memories, len(self.possible_keys)))
         labels[:, :] = np.nan
         for idx in range(no_memories):
