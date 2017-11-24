@@ -39,7 +39,6 @@ class NeuralNetworkAgent:
             return predictions.argmax()
 
     def finish(self, state, score):
-        self.model.save(MODEL_SAVE_PATH)
         self.repo.close()
 
     def predict_rewards(self, state):

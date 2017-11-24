@@ -32,4 +32,6 @@ if __name__ == '__main__':
         config.GLOB_JOB_ID.set(game_num)
 
         Episode(agent, env).run()
+        if model is not None:
+            model.save(MODEL_SAVE_PATH)
 
