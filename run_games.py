@@ -3,8 +3,8 @@ from multiprocessing import freeze_support
 import config
 from agents.agent_factory import agent_factory
 from config import *
-from game.game_env import make_env
-from game.gameplay_job import GameplayJob
+from game.environment import make_env
+from game.episode import Episode
 
 freeze_support()
 if __name__ == '__main__':
@@ -31,5 +31,5 @@ if __name__ == '__main__':
         env.reset()
         config.GLOB_JOB_ID.set(game_num)
 
-        GameplayJob(agent, env).run()
+        Episode(agent, env).run()
 

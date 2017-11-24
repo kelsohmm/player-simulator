@@ -5,7 +5,7 @@ from config import _MARIO_POSSIBLE_MOVES, FRAMES_STACKED
 from game.state import State
 
 
-class GameplayJob:
+class Episode:
     _MAX_GAME_TIME_MINUTES = 5
 
     def __init__(self, agent, env):
