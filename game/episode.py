@@ -8,9 +8,10 @@ from game.state import State
 class Episode:
     _MAX_GAME_TIME_MINUTES = 5
 
-    def __init__(self, agent, env):
+    def __init__(self, agent, env, train_fun):
         self.env = env
         self.agent = agent
+        self.train_callback = train_fun
         self.start_time = time.time()
 
     def run(self):
@@ -19,6 +20,7 @@ class Episode:
         for i in itertools.count():
             state, reward, done, info = self.repeat_action(action_idx)
             action_idx = self.agent.react_to_new_game_screen(state, reward)
+            self.train_callback()
 
             logging.debug("Iter: %d, Score: %f, Time: %d", i, info['total_reward'], int(time.time() - start_time))
             if done:
