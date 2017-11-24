@@ -20,7 +20,7 @@ class Episode:
             state, reward, done, info = self.repeat_action(action_idx)
             action_idx = self.agent.react_to_new_game_screen(state, reward)
 
-            logging.debug("Iter: %d, Score: %f, Time: %d", i, reward, int(time.time() - start_time))
+            logging.debug("Iter: %d, Score: %f, Time: %d", i, info['total_reward'], int(time.time() - start_time))
             if done:
                 self.agent.finish(reward, state)
                 break
