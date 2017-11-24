@@ -2,7 +2,7 @@ import logging
 import random
 import cv2
 import numpy as np
-from config import RUN_MODE, PREVIEW_CONV_INPUT, MODEL_SAVE_PATH
+from config import RUN_MODE, PREVIEW_CONV_INPUT, MODEL_SAVE_PATH, CONV_SHAPE
 
 
 def screen_preview(screen):
@@ -17,10 +17,10 @@ class NeuralNetworkAgent:
         self.model = model
         self.repo = repo
         self.possible_keys = possible_game_inputs
-        self.frame_target = np.zeros((1, 128, 128, 1), dtype=np.ubyte)
+        self.frame_target = np.zeros((1,)+CONV_SHAPE, dtype=np.ubyte)
 
     def react_to_new_game_screen(self, screen_shot, score):
-        screen_shot = cv2.cvtColor(screen_shot, cv2.COLOR_RGB2GRAY).reshape((128, 128, 1))
+        screen_shot = cv2.cvtColor(screen_shot, cv2.COLOR_RGB2GRAY).reshape(CONV_SHAPE)
         predictions = self.predict_rewards(screen_shot)
         action_idx = self._choose_action_idx(predictions)
         self.repo.commit(screen_shot, score, action_idx)

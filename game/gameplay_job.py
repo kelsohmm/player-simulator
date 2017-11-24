@@ -2,11 +2,11 @@ import itertools
 import logging
 import time
 import cv2
-from config import _MARIO_POSSIBLE_MOVES
+from config import _MARIO_POSSIBLE_MOVES, FRAME_SIZE
 
-def resize_128(image):
-    return cv2.resize(image, (128, 128))
 
+def resize(image):
+    return cv2.resize(image, FRAME_SIZE)
 
 class GameplayJob:
     _MAX_GAME_TIME_MINUTES = 5
@@ -22,8 +22,8 @@ class GameplayJob:
         screen = score = done = None
         for i in itertools.count():
             for _ in range(3):
-                screen, score, done, _ = self.env.step(_MARIO_POSSIBLE_MOVES[action_idx])
-            screen = resize_128(screen)
+                screen, reward, done, info = self.env.step(_MARIO_POSSIBLE_MOVES[action_idx])
+            screen = resize(screen)
             action_idx = self.agent.react_to_new_game_screen(screen, score)
 
             game_time = time.time() - start_time

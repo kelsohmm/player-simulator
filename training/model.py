@@ -1,6 +1,6 @@
 import tensorflow as tf
 import keras as K
-from config import MODEL_PREVIEW_PATH
+from config import MODEL_PREVIEW_PATH, CONV_SHAPE
 
 
 def loss_mse_for_known(y_true, y_pred):
@@ -11,9 +11,9 @@ def loss_mse_for_known(y_true, y_pred):
 def create_network():
     print("--- STARTING LEARNING PROCESS ---")
 
-    frame_input = K.Input(shape=(128, 128, 1), name='frame_input')
+    frame_input = K.Input(shape=CONV_SHAPE, name='frame_input')
 
-    conv = K.layers.Conv2D(filters=32, kernel_size=8, strides=4, name='conv_1', input_shape=(128, 128, 1), data_format='channels_last')(frame_input)
+    conv = K.layers.Conv2D(filters=32, kernel_size=8, strides=4, name='conv_1', input_shape=CONV_SHAPE, data_format='channels_last')(frame_input)
     conv = K.layers.Conv2D(filters=64, kernel_size=4, strides=2, name='conv_2')(conv)
     conv = K.layers.Conv2D(filters=64, kernel_size=3, strides=2, name='conv_3')(conv)
     conved_frame = K.layers.Flatten()(conv)

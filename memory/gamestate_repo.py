@@ -1,5 +1,5 @@
 import numpy as np
-from config import GLOB_JOB_ID
+from config import GLOB_JOB_ID, CONV_SHAPE
 from memory.gamestate_database import GamestateDatabase
 
 
@@ -50,7 +50,7 @@ class GamestateRepo:
         return self._screen_from_text(prev_screen_text), action_idx, reward, self._screen_from_text(next_screen_text)
 
     def _screen_from_text(self, screen_text):
-        return np.fromstring(screen_text, dtype=np.ubyte).reshape((128, 128, 1)) \
+        return np.fromstring(screen_text, dtype=np.ubyte).reshape(CONV_SHAPE) \
             if screen_text is not None else None
 
     def _update_prevs(self, screen, action_idx):
