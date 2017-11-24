@@ -23,14 +23,18 @@ class NeuralNetworkAgent:
         action_idx = self._choose_action_idx(predictions)
         self.repo.commit(state, score, action_idx)
 
-        loss = 0
-        if self.repo.size() > 100:
-            memories = self.repo.get_commits_batch_with_last(self.BATCH_SIZE)
-            samples, labels = self._map_memories_to_train_data(memories)
-            loss = self.model.train_on_batch(samples, np.split(labels, 6, axis=1))
+        loss = self.train_model(self.model, self.repo)
 
         logging.debug('Rewards: %s, Chose: %s, Loss: %s', str(predictions), str(self.possible_keys[action_idx]), str(loss))
         return action_idx
+
+    def train_model(self, model, repo):
+        loss = 0
+        if repo.size() > 100:
+            memories = repo.get_commits_batch_with_last(self.BATCH_SIZE)
+            samples, labels = self._map_memories_to_train_data(memories)
+            loss = model.train_on_batch(samples, np.split(labels, 6, axis=1))
+        return loss
 
     def _choose_action_idx(self, predictions):
         if random.uniform(0., 1.) < 0.05 or self.repo.size() < 10000:
