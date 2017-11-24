@@ -27,12 +27,12 @@ class GamestateRepo:
                 self._postincremented_commit_number(),
                 self.prev_screen.tostring(),
                 self.prev_action_idx,
-                self.prev_score,
+                score,
                 screen.tostring()
             )
             self.db.insert_transition(*self.last_transition)
 
-        self._update_prevs(screen, score, action_idx)
+        self._update_prevs(screen, action_idx)
 
     def close(self):
         self.last_transition = (
@@ -53,9 +53,8 @@ class GamestateRepo:
         return np.fromstring(screen_text, dtype=np.ubyte).reshape((128, 128, 1)) \
             if screen_text is not None else None
 
-    def _update_prevs(self, screen, score, action_idx):
+    def _update_prevs(self, screen, action_idx):
         self.prev_screen = screen
-        self.prev_score = score
         self.prev_action_idx = action_idx
 
     def _postincremented_commit_number(self):
