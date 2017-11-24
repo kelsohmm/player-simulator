@@ -12,7 +12,7 @@ _DATABASE_SCHEMA = '''CREATE TABLE transitions
                                   next_state BLOB,
                                   PRIMARY KEY (game_id, time))'''
 
-class GamestateDatabase:
+class Database:
     def __init__(self, filepath):
         self.filepath = filepath
         self.conn = sqlite3.connect(os.path.join(self.filepath, 'transitions.db'))

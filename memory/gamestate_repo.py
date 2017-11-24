@@ -1,13 +1,13 @@
 import numpy as np
 from config import GLOB_JOB_ID, CONV_SHAPE
-from memory.gamestate_database import GamestateDatabase
+from memory.database import Database
 
 
-class GamestateRepo:
+class Repo:
     END_GAME_REWARD = 0.
 
     def __init__(self, file_path):
-        self.db = GamestateDatabase(file_path)
+        self.db = Database(file_path)
         self.last_transition = None
         self.prev_screen = None
         self.commit_number = 0

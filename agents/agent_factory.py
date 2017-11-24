@@ -1,4 +1,4 @@
-from memory.gamestate_repo import GamestateRepo
+from memory.gamestate_repo import Repo
 
 def _createNNAgent(possible_keys, repo, model):
     from agents.neural_network_agent import NeuralNetworkAgent
@@ -7,7 +7,7 @@ def _createNNAgent(possible_keys, repo, model):
 def agent_factory(agent_name, possible_keys, save_path, model):
     from agents.random_agent import RandomAgent
 
-    repo = GamestateRepo(save_path)
+    repo = Repo(save_path)
 
     return {
         'AGENT_RANDOM': lambda: RandomAgent(possible_keys, repo),
