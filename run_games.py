@@ -19,12 +19,11 @@ if __name__ == '__main__':
     repo = Repo(save_path)
     agent = NeuralNetworkAgent(model, repo)
     trainer = ModelTraining(model, repo)
-    env = make_env()
 
-    for game_num in range(NO_GAMES):
-        env.reset()
-        config.GLOB_JOB_ID.set(game_num)
-
-        Episode(agent, env, trainer.train).run()
-        model.save(MODEL_SAVE_PATH)
+    with make_env() as env:
+        for game_num in range(NO_GAMES):
+            env.reset()
+            config.GLOB_JOB_ID.set(game_num)
+            Episode(agent, env, trainer.train).run()
+            model.save(MODEL_SAVE_PATH)
 
