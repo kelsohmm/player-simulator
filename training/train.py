@@ -1,17 +1,23 @@
+import logging
+
 import numpy as np
 from config import BATCH_SIZE, DISCOUNT_FACTOR, CONV_SHAPE
 
 LEARNING_START = 100
-
+CALIBRATION_BATCH_SIZE = 250
+CALIBRATION_EPOCHS = 5
 
 class ModelTraining:
     def __init__(self, model, memories_repo):
         self.model = model
         self.repo = memories_repo
         self.no_outputs = len(model.outputs)
+        self.calibrated = False
 
     def train(self):
         if self.repo.size() > LEARNING_START:
+            if not self.calibrated:
+                self._calibrate_network()
             memories = self.repo.get_commits_batch_with_last(BATCH_SIZE)
             samples, labels = self._map_memories_to_train_data(memories)
             loss = self.model.train_on_batch(x=samples,
@@ -56,5 +62,16 @@ class ModelTraining:
         class_weights = [0.0] * self.no_outputs
         class_weights[trained_action_idx] = 1.0
         return class_weights
+
+    def _calibrate_network(self):
+        logging.debug("Calibrating network with batch size: %d for %d epochs" % (CALIBRATION_BATCH_SIZE, CALIBRATION_EPOCHS))
+        memories = self.repo.get_commits_batch_with_last(CALIBRATION_BATCH_SIZE)
+        samples, _ = self._map_memories_to_train_data(memories)
+        labels = np.zeros((len(memories), self.no_outputs))
+        self.model.fit(x=samples,
+                       y=np.split(labels, self.no_outputs, axis=1),
+                       epochs = CALIBRATION_EPOCHS)
+        self.calibrated = True
+
 
 
