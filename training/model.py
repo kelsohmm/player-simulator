@@ -17,14 +17,12 @@ def create_network():
     hidden = K.layers.Dense(512, activation='relu', name='hidden_1')(concat)
     hidden = K.layers.Dense(512, activation='relu', name='hidden_2')(hidden)
 
-    output_names = ["output_%d" % i for i in range(6)]
-    output_layers = [K.layers.Dense(1, name=name)(hidden)
-                     for name in output_names]
+    output = K.layers.Dense(6, name='output')(hidden)
 
     model = K.models.Model(inputs=[frame_input],
-                           outputs=output_layers)
+                           outputs=output)
 
-    model.compile(optimizer=K.optimizers.Adam(), loss={name: K.losses.mean_squared_error for name in output_names})
+    model.compile(optimizer=K.optimizers.Adam(), loss=K.losses.mean_squared_error)
 
     try:
         K.utils.plot_model(model, show_shapes=True, to_file=MODEL_PREVIEW_PATH)

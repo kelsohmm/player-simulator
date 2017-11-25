@@ -10,7 +10,7 @@ class ModelTraining:
     def __init__(self, model, memories_repo):
         self.model = model
         self.repo = memories_repo
-        self.no_outputs = len(model.outputs)
+        self.no_outputs = 6
         self.calibrated = False
 
     def train(self):
@@ -20,7 +20,7 @@ class ModelTraining:
             memories = self.repo.get_commits_batch_with_last(BATCH_SIZE)
             samples, labels = self._map_memories_to_train_data(memories)
             loss = self.model.train_on_batch(x=samples,
-                                             y=np.split(labels, self.no_outputs, axis=1),
+                                             y=labels,
                                              class_weight=self._activaty_only_trained_action_idx(memories))
             return loss
         else:
@@ -38,7 +38,7 @@ class ModelTraining:
 
     def _highest_reward(self, next_screen):
         if next_screen is not None:
-            predictions = np.concatenate(self.model.predict(next_screen.reshape((1,) + CONV_SHAPE))).flatten()
+            predictions = self.model.predict(next_screen.reshape((1,) + CONV_SHAPE))
             return predictions.max()
         else:
             return 0.0
@@ -68,7 +68,7 @@ class ModelTraining:
         samples, _ = self._map_memories_to_train_data(memories)
         labels = np.zeros((len(memories), self.no_outputs))
         self.model.fit(x=samples,
-                       y=np.split(labels, self.no_outputs, axis=1),
+                       y=labels,
                        epochs = CALIBRATION_EPOCHS)
         self.calibrated = True
 
