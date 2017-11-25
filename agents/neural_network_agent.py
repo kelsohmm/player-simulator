@@ -1,7 +1,7 @@
 import logging
 import random
 import numpy as np
-from config import CONV_SHAPE
+from config import CONV_SHAPE, MIN_MEMORIES
 
 
 class NeuralNetworkAgent:
@@ -18,7 +18,7 @@ class NeuralNetworkAgent:
         return action_idx
 
     def _choose_action_idx(self, predictions):
-        if random.uniform(0., 1.) < 0.05 or self.repo.size() < 10000:
+        if random.uniform(0., 1.) < 0.05 or self.repo.size() <= MIN_MEMORIES:
             return random.randint(0, 5)
         else:
             return predictions.argmax()

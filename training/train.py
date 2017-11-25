@@ -1,11 +1,10 @@
 import logging
 
 import numpy as np
-from config import BATCH_SIZE, DISCOUNT_FACTOR, CONV_SHAPE
+from config import BATCH_SIZE, DISCOUNT_FACTOR, CONV_SHAPE, MIN_MEMORIES
 
-LEARNING_START = 100
-CALIBRATION_BATCH_SIZE = 250
-CALIBRATION_EPOCHS = 5
+CALIBRATION_BATCH_SIZE = MIN_MEMORIES
+CALIBRATION_EPOCHS = 100
 
 class ModelTraining:
     def __init__(self, model, memories_repo):
@@ -15,7 +14,7 @@ class ModelTraining:
         self.calibrated = False
 
     def train(self):
-        if self.repo.size() > LEARNING_START:
+        if self.repo.size() > MIN_MEMORIES:
             if not self.calibrated:
                 self._calibrate_network()
             memories = self.repo.get_commits_batch_with_last(BATCH_SIZE)
