@@ -30,6 +30,7 @@ class ModelTraining:
         no_memories = len(memories)
         samples = np.zeros((no_memories,) + CONV_SHAPE, dtype=np.ubyte)
         labels = np.zeros((no_memories, self.no_outputs))
+        labels[:, :] = np.nan
         for idx in range(no_memories):
             prev_screen, action_idx, reward, next_screen = memories[idx]
             samples[idx] = prev_screen
