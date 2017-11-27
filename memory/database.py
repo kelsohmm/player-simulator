@@ -17,9 +17,9 @@ class Database:
         self.filepath = filepath
         self.conn = sqlite3.connect(os.path.join(self.filepath, 'transitions.db'))
         self.cursor = self.conn.cursor()
-        self.db_size = 0
         self.cursor.execute(_DATABASE_SCHEMA)
         self.conn.commit()
+        self.db_size = self._query_transitions_count()
 
     def size(self):
         return self.db_size
@@ -34,3 +34,8 @@ class Database:
         self.cursor.execute('INSERT INTO transitions VALUES (?,?,?,?,?,?)',
                             (game_id, time, curr_state, action_idx, reward, next_state))
         self.conn.commit()
+
+    def _query_transitions_count(self):
+        res = self.cursor.execute('SELECT COUNT(*) FROM transitions')
+        (count, ) = list(res)[0]
+        return count
