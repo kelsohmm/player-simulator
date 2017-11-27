@@ -17,7 +17,6 @@ class Database:
         self.filepath = filepath
         self.conn = sqlite3.connect(os.path.join(self.filepath, 'transitions.db'))
         self.cursor = self.conn.cursor()
-        self.games_duration = {}
         self.db_size = 0
         self.cursor.execute(_DATABASE_SCHEMA)
         self.conn.commit()
@@ -29,19 +28,9 @@ class Database:
         return list(self.cursor.execute('SELECT * FROM transitions WHERE action_idx=%d ORDER BY RANDOM() LIMIT %d' % (batch_size, action_idx)))
 
     def insert_transition(self, game_id, time, curr_state, action_idx, reward, next_state):
-        if game_id not in self.games_duration:
-            self._init_new_game(game_id)
-
         self.db_size += 1
-        self.games_duration[game_id] += 1
         curr_state = Binary(curr_state)
         next_state = Binary(next_state) if next_state is not None else None
         self.cursor.execute('INSERT INTO transitions VALUES (?,?,?,?,?,?)',
                             (game_id, time, curr_state, action_idx, reward, next_state))
         self.conn.commit()
-
-    def _random_game_time(self, game_id):
-        return random.randint(0, self.games_duration[game_id])
-
-    def _init_new_game(self, game_id):
-        self.games_duration[game_id] = 0
