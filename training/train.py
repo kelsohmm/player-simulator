@@ -4,7 +4,7 @@ import numpy as np
 from config import BATCH_SIZE, DISCOUNT_FACTOR, CONV_SHAPE, MIN_MEMORIES
 
 CALIBRATION_BATCH_SIZE = MIN_MEMORIES
-CALIBRATION_EPOCHS = 100
+CALIBRATION_EPOCHS = 500
 
 class ModelTraining:
     def __init__(self, model, memories_repo):
@@ -70,7 +70,7 @@ class ModelTraining:
         labels = np.zeros((len(memories), self.no_outputs))
         self.model.fit(x=samples,
                        y=labels,
-                       epochs = CALIBRATION_EPOCHS)
+                       epochs=CALIBRATION_EPOCHS)
         self.calibrated = True
 
 
