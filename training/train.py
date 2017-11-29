@@ -20,8 +20,7 @@ class ModelTraining:
             memories = self.repo.get_commits_batch_with_last(BATCH_SIZE)
             samples, labels = self._map_memories_to_train_data(memories)
             loss = self.model.train_on_batch(x=samples,
-                                             y=labels,
-                                             class_weight=self._activaty_only_trained_action_idx(memories))
+                                             y=labels)
             return loss
         else:
             return 0.
@@ -43,25 +42,6 @@ class ModelTraining:
             return predictions.max()
         else:
             return 0.0
-
-    def _equal_actions_ids(self, memories):
-        _, first_action_idx, _, _ = memories[0]
-        for i in range(1, len(memories)):
-            _, action_idx, _, _ = memories[i]
-            if first_action_idx != action_idx:
-                return False
-        return True
-
-    def _trained_action_idx(self, memories):
-        assert self._equal_actions_ids(memories), "All action ids must be equal"
-        _, first_action_idx, _, _ = memories[0]
-        return first_action_idx
-
-    def _activaty_only_trained_action_idx(self, memories):
-        trained_action_idx = self._trained_action_idx(memories)
-        class_weights = [0.0] * self.no_outputs
-        class_weights[trained_action_idx] = 1.0
-        return class_weights
 
     def _calibrate_network(self):
         logging.debug("Calibrating network with batch size: %d for %d epochs" % (CALIBRATION_BATCH_SIZE, CALIBRATION_EPOCHS))
