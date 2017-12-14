@@ -15,9 +15,8 @@ _DATABASE_SCHEMA = '''
 '''
 
 class Database:
-    def __init__(self, filepath):
-        self.filepath = filepath
-        self.conn = sqlite3.connect(os.path.join(self.filepath, 'transitions.db'))
+    def __init__(self, conn):
+        self.conn = conn
         self.cursor = self.conn.cursor()
         self.cursor.execute(_DATABASE_SCHEMA)
         self.conn.commit()

@@ -6,8 +6,8 @@ from memory.database import Database
 class Repo:
     END_GAME_REWARD = 0.
 
-    def __init__(self, file_path):
-        self.db = Database(file_path)
+    def __init__(self, database):
+        self.db = database
         self.last_transition = None
         self.prev_screen = None
         self.commit_number = 0
