@@ -1,5 +1,5 @@
 import numpy as np
-from config import GLOB_JOB_ID, CONV_SHAPE
+from config import CONV_SHAPE
 from memory.database import Database
 
 
@@ -11,6 +11,10 @@ class Repo:
         self.last_transition = None
         self.prev_screen = None
         self.commit_number = 0
+        self.game_number = 0
+
+    def set_game_number(self, game_number):
+        self.game_number = game_number
 
     def size(self):
         return self.db.size()
@@ -23,7 +27,7 @@ class Repo:
     def commit(self, screen, score, action_idx):
         if self.prev_screen is not None:
             self.last_transition = (
-                GLOB_JOB_ID.job_id,
+                self.game_number,
                 self._postincremented_commit_number(),
                 self.prev_screen.as_matrix().tostring(),
                 self.prev_action_idx,
@@ -36,7 +40,7 @@ class Repo:
 
     def close(self):
         self.last_transition = (
-            GLOB_JOB_ID.job_id,
+            self.game_number,
             self._postincremented_commit_number(),
             self.prev_screen.as_matrix().tostring(),
             self.prev_action_idx,
