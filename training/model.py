@@ -1,6 +1,6 @@
 import tensorflow as tf
 import keras as K
-from config import MODEL_PREVIEW_PATH, CONV_SHAPE
+from config import CONV_SHAPE
 
 
 def loss_mse_for_known(y_true, y_pred):
@@ -8,7 +8,7 @@ def loss_mse_for_known(y_true, y_pred):
     return K.backend.mean(K.backend.square(replaced - y_pred), axis=-1)
 
 
-def create_network():
+def create_network(preview_path):
     print("--- STARTING LEARNING PROCESS ---")
 
     frame_input = K.Input(shape=CONV_SHAPE, name='frame_input')
@@ -31,8 +31,11 @@ def create_network():
     model.compile(optimizer=K.optimizers.Adam(), loss=loss_mse_for_known)
 
     try:
-        K.utils.plot_model(model, show_shapes=True, to_file=MODEL_PREVIEW_PATH)
+        K.utils.plot_model(model, show_shapes=True, to_file=preview_path)
     except:
         pass
 
     return model
+
+def load_model(model_path):
+    return K.models.load_model(model_path)

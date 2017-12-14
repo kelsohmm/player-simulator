@@ -3,6 +3,7 @@ import os
 
 ### RUN SETTINGS ###
 NO_GAMES = 100
+SESSION_NAME = "session1"
 
 ### LEARNING PARAMETERS ###
 FRAME_SIZE = (128, 128)
@@ -13,12 +14,7 @@ DISCOUNT_FACTOR = 0.99
 MIN_MEMORIES = 1000
 
 ### GLOBAL SETTINGS ###
-SAVE_API_VERSION = '2.0'  # saving preprocessed frames directly
-
-DUMPS_DIR = os.path.join('saved_sessions', 'api-'+SAVE_API_VERSION)
-MODEL_SAVE_PATH = os.path.join(DUMPS_DIR, 'model.h5')
-DATA_SAVE_PATH = os.path.join(DUMPS_DIR, 'data.npz')
-MODEL_PREVIEW_PATH = os.path.join(DUMPS_DIR, 'model_preview.png')
+SESSIONS_DIR = os.path.join('saved_sessions', SESSION_NAME)
 
 
 _MARIO_POSSIBLE_MOVES = [

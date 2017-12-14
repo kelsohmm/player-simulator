@@ -6,17 +6,15 @@ from config import *
 from game.environment import make_env
 from game.episode import Episode
 from memory.gamestate_repo import Repo
+from session import Session
 from training.train import ModelTraining
 from training.model import create_network
 
 freeze_support()
 if __name__ == '__main__':
 
-    save_path = os.path.join(DUMPS_DIR, datetime.datetime.now().strftime("%Y%m%d-%H%M%S"))
-    os.makedirs(save_path)
-
-    model = create_network()
-    repo = Repo(save_path)
+    session = Session()
+    model, repo = session.open(SESSIONS_DIR)
     agent = NeuralNetworkAgent(model, repo)
     trainer = ModelTraining(model, repo)
 
@@ -25,5 +23,5 @@ if __name__ == '__main__':
             env.reset()
             repo.set_game_number(game_num)
             Episode(agent, env, trainer.train).run()
-            model.save(MODEL_SAVE_PATH)
+            session.save_model()
 
