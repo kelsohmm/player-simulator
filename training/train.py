@@ -17,7 +17,7 @@ class ModelTraining:
         if self.repo.size() > MIN_MEMORIES:
             if not self.calibrated:
                 self._calibrate_network()
-            memories = self.repo.get_commits_batch_with_last(BATCH_SIZE)
+            memories = self.repo.get_commits_batch(BATCH_SIZE)
             samples, labels = self._map_memories_to_train_data(memories)
             loss = self.model.train_on_batch(x=samples,
                                              y=labels)
@@ -45,7 +45,7 @@ class ModelTraining:
 
     def _calibrate_network(self):
         logging.debug("Calibrating network with batch size: %d for %d epochs" % (CALIBRATION_BATCH_SIZE, CALIBRATION_EPOCHS))
-        memories = self.repo.get_commits_batch_with_last(CALIBRATION_BATCH_SIZE)
+        memories = self.repo.get_commits_batch(CALIBRATION_BATCH_SIZE)
         samples, _ = self._map_memories_to_train_data(memories)
         labels = np.zeros((len(memories), self.no_outputs))
         self.model.fit(x=samples,

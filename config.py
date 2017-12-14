@@ -14,7 +14,7 @@ DISCOUNT_FACTOR = 0.99
 MIN_MEMORIES = 1000
 
 ### GLOBAL SETTINGS ###
-SESSIONS_DIR = os.path.join('saved_sessions', SESSION_NAME)
+SESSION_DIR = os.path.join('saved_sessions', SESSION_NAME)
 
 
 _MARIO_POSSIBLE_MOVES = [

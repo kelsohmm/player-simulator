@@ -38,4 +38,4 @@ def create_network(preview_path):
     return model
 
 def load_model(model_path):
-    return K.models.load_model(model_path)
+    return K.models.load_model(model_path, custom_objects={'loss_mse_for_known': loss_mse_for_known})

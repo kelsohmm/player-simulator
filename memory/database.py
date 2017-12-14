@@ -1,32 +1,17 @@
-import sqlite3
 from sqlite3 import Binary
-import os
 
-# TODO: change reward to absolute score
-_DATABASE_SCHEMA = '''
-    CREATE TABLE transitions (
-        game_id INT NOT NULL,
-        frame_number INT NOT NULL,
-        curr_state BLOB NOT NULL,
-        action_idx INT NOT NULL,
-        reward REAL NOT NULL,
-        next_state BLOB,
-        timestamp DATETIME DEFAULT CURRENT_TIMESTAMP); 
-'''
 
 class Database:
     def __init__(self, conn):
         self.conn = conn
         self.cursor = self.conn.cursor()
-        self.cursor.execute(_DATABASE_SCHEMA)
-        self.conn.commit()
         self.db_size = self._query_transitions_count()
 
     def size(self):
         return self.db_size
 
     def fetch_random_batch(self, batch_size, action_idx):
-        return list(self.cursor.execute('SELECT * FROM transitions WHERE action_idx=%d ORDER BY RANDOM() LIMIT %d' % (batch_size, action_idx)))
+        return list(self.cursor.execute('SELECT * FROM transitions WHERE action_idx=%d ORDER BY RANDOM() LIMIT %d' % (action_idx, batch_size)))
 
     def insert_transition(self, game_id, frame_number, curr_state, action_idx, reward, next_state):
         self.db_size += 1

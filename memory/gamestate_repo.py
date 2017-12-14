@@ -1,6 +1,5 @@
 import numpy as np
 from config import CONV_SHAPE
-from memory.database import Database
 
 
 class Repo:
@@ -12,6 +11,7 @@ class Repo:
         self.prev_screen = None
         self.commit_number = 0
         self.game_number = 0
+        self.prev_action_idx = 0
 
     def set_game_number(self, game_number):
         self.game_number = game_number
@@ -19,10 +19,9 @@ class Repo:
     def size(self):
         return self.db.size()
 
-    def get_commits_batch_with_last(self, batch_size):
-        _, _, _, action_idx, _, _ = self.last_transition
+    def get_commits_batch(self, batch_size):
         return list(map(self._memory_from_commit,
-                        [self.last_transition] + self.db.fetch_random_batch(batch_size, action_idx)))
+                        self.db.fetch_random_batch(batch_size, self.prev_action_idx)))
 
     def commit(self, screen, score, action_idx):
         if self.prev_screen is not None:
@@ -50,7 +49,7 @@ class Repo:
         self.db.insert_transition(*self.last_transition)
 
     def _memory_from_commit(self, commit):
-        _, _, prev_screen_text, action_idx, reward, next_screen_text = commit
+        _, _, prev_screen_text, action_idx, reward, next_screen_text, _ = commit
         return self._screen_from_text(prev_screen_text), action_idx, reward, self._screen_from_text(next_screen_text)
 
     def _screen_from_text(self, screen_text):

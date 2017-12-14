@@ -1,5 +1,5 @@
 from multiprocessing import freeze_support
-from config import SESSION_NAME, NO_GAMES
+from config import NO_GAMES, SESSION_DIR
 from agents.neural_network_agent import NeuralNetworkAgent
 from game.environment import make_env
 from game.episode import Episode
@@ -10,7 +10,7 @@ freeze_support()
 if __name__ == '__main__':
 
     session = Session()
-    model, repo = session.open(SESSION_NAME)
+    model, repo = session.open(SESSION_DIR)
     agent = NeuralNetworkAgent(model, repo)
     trainer = ModelTraining(model, repo)
 
