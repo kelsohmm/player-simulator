@@ -13,13 +13,10 @@ logging.basicConfig(format='%(asctime)s %(message)s', datefmt='%H:%M:%S',  level
 
 freeze_support()
 if __name__ == '__main__':
+    with make_env() as env, Session(SESSION_DIR) as (model, repo):
+        agent = NeuralNetworkAgent(model, repo)
+        trainer = ModelTraining(model, repo)
 
-    session = Session()
-    model, repo = session.open(SESSION_DIR)
-    agent = NeuralNetworkAgent(model, repo)
-    trainer = ModelTraining(model, repo)
-
-    with make_env() as env:
         for game_num in range(NO_GAMES):
             env.reset()
             repo.set_game_number(game_num)
