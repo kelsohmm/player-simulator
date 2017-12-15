@@ -8,13 +8,13 @@ SESSION_NAME = "session1"
 ### LEARNING PARAMETERS ###
 FRAME_SIZE = (128, 128)
 FRAMES_STACKED = 4
-CONV_SHAPE = FRAME_SIZE + (FRAMES_STACKED,)
 BATCH_SIZE = 50
 DISCOUNT_FACTOR = 0.99
 MIN_MEMORIES = 1000
 
 ### GLOBAL SETTINGS ###
 SESSION_DIR = os.path.join('saved_sessions', SESSION_NAME)
+CONV_SHAPE = FRAME_SIZE + (FRAMES_STACKED,)
 
 
 _MARIO_POSSIBLE_MOVES = [
@@ -34,3 +34,5 @@ _MARIO_POSSIBLE_MOVES = [
     # [0, 0, 0, 0, 1, 1],  # A + B
 ]
 MARIO_CONFIG = (_MARIO_POSSIBLE_MOVES)
+
+logging.basicConfig(format='%(asctime)s %(message)s', datefmt='%H:%M:%S',  level=logging.DEBUG)
