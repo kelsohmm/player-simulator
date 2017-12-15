@@ -1,4 +1,3 @@
-import logging
 import os
 
 ### RUN SETTINGS ###
@@ -34,5 +33,3 @@ _MARIO_POSSIBLE_MOVES = [
     # [0, 0, 0, 0, 1, 1],  # A + B
 ]
 MARIO_CONFIG = (_MARIO_POSSIBLE_MOVES)
-
-logging.basicConfig(format='%(asctime)s %(message)s', datefmt='%H:%M:%S',  level=logging.DEBUG)

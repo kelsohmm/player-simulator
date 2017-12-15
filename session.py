@@ -1,4 +1,3 @@
-import logging
 import sqlite3
 from config import *
 from memory.database import Database
