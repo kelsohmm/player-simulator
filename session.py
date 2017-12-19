@@ -19,10 +19,16 @@ class Session:
 
         self.repo = Repo(Database(self.db_conn))
 
-        return self.model, self.repo
+        return self
 
     def __exit__(self, type, value, traceback):
         self.db_conn.close()
+
+    def get_repo(self):
+        return self.repo
+
+    def get_model(self):
+        return self.model
 
     def save_model(self):
         self.model.save(self.model_path)
