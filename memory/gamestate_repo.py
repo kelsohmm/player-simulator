@@ -31,7 +31,6 @@ class Repo:
                 self.prev_screen.as_matrix().tostring(),
                 self.prev_action_idx,
                 score,
-                screen.as_matrix().tostring()
             )
             self.db.insert_transition(*self.last_transition)
 
@@ -44,12 +43,11 @@ class Repo:
             self.prev_screen.as_matrix().tostring(),
             self.prev_action_idx,
             self.END_GAME_REWARD,
-            None
         )
         self.db.insert_transition(*self.last_transition)
 
     def _memory_from_commit(self, commit):
-        _, _, prev_screen_text, action_idx, reward, next_screen_text, _ = commit
+        prev_screen_text, action_idx, reward, next_screen_text = commit
         return self._screen_from_text(prev_screen_text), action_idx, reward, self._screen_from_text(next_screen_text)
 
     def _screen_from_text(self, screen_text):
