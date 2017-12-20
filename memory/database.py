@@ -17,16 +17,14 @@ class Database:
     def __init__(self, conn):
         self.conn = conn
         self.cursor = self.conn.cursor()
-        self.db_size = self._query_history_count()
 
     def size(self):
-        return self.db_size
+        return self._query_history_count()
 
     def fetch_random_batch(self, batch_size, action_idx):
         return list(self.cursor.execute(_SELECT_MEMORY_QUERY % (action_idx, batch_size)))
 
     def insert_transition(self, game_id, state_id, state, action_idx, reward):
-        self.db_size += 1
         self.cursor.execute('INSERT INTO history (game_id, state_id, state, action_idx, reward) ' # do not insert timestamp
                             'VALUES (?,?,?,?,?)', (game_id, state_id, Binary(state), action_idx, reward))
         self.conn.commit()

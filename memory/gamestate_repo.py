@@ -7,14 +7,14 @@ class Repo:
 
     def __init__(self, database):
         self.db = database
-        self.last_transition = None
         self.prev_screen = None
-        self.game_number = database.get_free_game_id()
+        self.initial_db_size = self.db.size()
+        self.game_number = self.db.get_free_game_id()
         self.commit_number = 0
         self.prev_action_idx = 0
 
     def size(self):
-        return self.db.size()
+        return self.initial_db_size + self.commit_number
 
     def get_commits_batch(self, batch_size):
         return list(map(self._memory_from_commit,
@@ -22,26 +22,23 @@ class Repo:
 
     def commit(self, screen, score, action_idx):
         if self.prev_screen is not None:
-            self.last_transition = (
-                self.game_number,
-                self._postincremented_commit_number(),
-                self.prev_screen.as_matrix().tostring(),
-                self.prev_action_idx,
-                score,
-            )
-            self.db.insert_transition(*self.last_transition)
+            self._push_commit_to_database(score)
 
         self._update_prevs(screen, action_idx)
 
-    def close(self):
-        self.last_transition = (
+    def _push_commit_to_database(self, score):
+        commit = (
             self.game_number,
-            self._postincremented_commit_number(),
+            self.commit_number,
             self.prev_screen.as_matrix().tostring(),
             self.prev_action_idx,
-            self.END_GAME_REWARD,
+            score,
         )
-        self.db.insert_transition(*self.last_transition)
+        self.commit_number += 1
+        self.db.insert_transition(*commit)
+
+    def close(self):
+        self._push_commit_to_database(self.END_GAME_REWARD)
 
     def _memory_from_commit(self, commit):
         prev_screen_text, action_idx, reward, next_screen_text = commit
