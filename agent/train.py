@@ -1,6 +1,9 @@
 import numpy as np
 from config import BATCH_SIZE, DISCOUNT_FACTOR, CONV_SHAPE, MIN_MEMORIES
 
+END_GAME_REWARD = -5.0
+
+
 class ModelTraining:
     def __init__(self, model, memories_repo):
         self.model = model
@@ -23,7 +26,8 @@ class ModelTraining:
         labels = np.zeros((no_memories, self.no_outputs))
         labels[:, :] = np.nan
         for idx in range(no_memories):
-            prev_screen, action_idx, reward, next_screen = memories[idx]
+            prev_screen, action_idx, prev_score, next_score, next_screen = memories[idx]
+            reward = self._calc_reward(prev_score, next_score)
             samples[idx] = prev_screen
             labels[idx, action_idx] = reward + (DISCOUNT_FACTOR * self._highest_reward(next_screen))
         return samples, labels
@@ -34,3 +38,9 @@ class ModelTraining:
             return predictions.max()
         else:
             return 0.0
+
+    def _calc_reward(self, prev_score, next_score):
+        if next_score is None:
+            return END_GAME_REWARD
+        else:
+            return next_score - prev_score

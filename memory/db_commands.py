@@ -1,12 +1,11 @@
 
-# TODO: change reward to absolute score
 _DATABASE_SCHEMA = '''
     CREATE TABLE history (
         game_id INT NOT NULL,
         state_id INT NOT NULL,
         state BLOB NOT NULL,
         action_idx INT NOT NULL,
-        reward REAL NOT NULL,
+        score REAL NOT NULL,
         timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
         PRIMARY KEY (game_id, state_id)
     ); 
