@@ -24,7 +24,7 @@ class Database:
     def fetch_random_batch(self, batch_size):
         return list(self.cursor.execute(_SELECT_MEMORY_QUERY % batch_size))
 
-    def insert_transition(self, game_id, state_id, state, action_idx, score):
+    def insert(self, game_id, state_id, state, action_idx, score):
         self.cursor.execute('INSERT INTO history (game_id, state_id, state, action_idx, score) ' # do not insert timestamp
                             'VALUES (?,?,?,?,?)', (game_id, state_id, Binary(state), int(action_idx), score))
         self.conn.commit()
