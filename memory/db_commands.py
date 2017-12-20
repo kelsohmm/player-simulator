@@ -7,14 +7,12 @@ _DATABASE_SCHEMA = '''
         state BLOB NOT NULL,
         action_idx INT NOT NULL,
         reward REAL NOT NULL,
-        timestamp DATETIME DEFAULT CURRENT_TIMESTAMP); 
-'''
-_DATABASE_HISTORY_INDEX = '''
-        CREATE INDEX game_moment ON history (game_id, state_id);
+        timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
+        PRIMARY KEY (game_id, state_id)
+    ); 
 '''
 
 def commit_db_schema(connection):
     cursor = connection.cursor()
     cursor.execute(_DATABASE_SCHEMA)
-    cursor.execute(_DATABASE_HISTORY_INDEX)
     connection.commit()

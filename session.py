@@ -18,15 +18,15 @@ class Session:
         else:
             self._open_new()
 
-        self.repo = Repo(Database(self.db_conn))
+        self.db = Database(self.db_conn)
 
         return self
 
     def __exit__(self, type, value, traceback):
         self.db_conn.close()
 
-    def get_repo(self):
-        return self.repo
+    def get_db(self):
+        return self.db
 
     def get_model(self):
         return self.model

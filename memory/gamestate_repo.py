@@ -9,12 +9,9 @@ class Repo:
         self.db = database
         self.last_transition = None
         self.prev_screen = None
+        self.game_number = database.get_free_game_id()
         self.commit_number = 0
-        self.game_number = 0
         self.prev_action_idx = 0
-
-    def set_game_number(self, game_number):
-        self.game_number = game_number
 
     def size(self):
         return self.db.size()

@@ -31,7 +31,12 @@ class Database:
                             'VALUES (?,?,?,?,?)', (game_id, state_id, Binary(state), action_idx, reward))
         self.conn.commit()
 
+    def get_free_game_id(self):
+        res = self.cursor.execute('SELECT MAX(game_id) FROM history')
+        (max_game_id, ) = list(res)[0]
+        return max_game_id+1 if max_game_id is not None else 0
+
     def _query_history_count(self):
         res = self.cursor.execute('SELECT COUNT(*) FROM history')
         (count, ) = list(res)[0]
-        return count
+        return count if count is not None else 0
