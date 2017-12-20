@@ -1,12 +1,13 @@
 import logging
 from multiprocessing import freeze_support
-from config import NO_GAMES, SESSION_DIR
+
 from agent.neural_network_agent import NeuralNetworkAgent
+from agent.train import ModelTraining
+from config import NO_GAMES, SESSION_DIR
 from game.environment import make_env
 from game.episode import Episode
 from memory.gamestate_repo import Repo
 from session import Session
-from training.train import ModelTraining
 
 for handler in logging.root.handlers[:]:  # needed to reconfigure logging
     logging.root.removeHandler(handler)

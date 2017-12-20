@@ -1,9 +1,9 @@
 import sqlite3
+
+from agent.model import create_network, load_model
 from config import *
 from memory.database import Database
 from memory.db_commands import commit_db_schema
-from memory.gamestate_repo import Repo
-from training.model import create_network, load_model
 
 DB_FILENAME = 'history.db'
 
