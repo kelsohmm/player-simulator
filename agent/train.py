@@ -6,7 +6,6 @@ class ModelTraining:
         self.model = model
         self.repo = memories_repo
         self.no_outputs = 6
-        self.calibrated = False
 
     def train(self):
         if self.repo.size() > MIN_MEMORIES:

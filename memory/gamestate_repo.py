@@ -18,7 +18,7 @@ class Repo:
 
     def get_commits_batch(self, batch_size):
         return list(map(self._memory_from_commit,
-                        self.db.fetch_random_batch(batch_size, self.prev_action_idx)))
+                        self.db.fetch_random_batch(batch_size)))
 
     def commit(self, screen, score, action_idx):
         if self.prev_screen is not None:
