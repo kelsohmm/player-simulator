@@ -12,7 +12,7 @@ class NeuralNetworkAgent:
     def react_to_new_game_screen(self, state, score):
         predictions = self.model.predict(state.reshape((1,) + CONV_SHAPE))
         action_idx = self._choose_action_idx(predictions)
-        self.repo.commit(state, score, action_idx)
+        self.repo.commit(state, score, action_idx, predictions.tolist()[0])
 
         logging.debug('Rewards: %s, Chose: %s', str(predictions), action_idx)
         return action_idx

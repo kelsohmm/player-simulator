@@ -16,16 +16,14 @@ class Repo:
         return list(map(self._memory_from_commit,
                         self.db.fetch_random_batch(batch_size)))
 
-    def commit(self, screen, score, action_idx):
-        commit = (
-            self.game_number,
-            self.commit_number,
-            screen.tostring(),
-            action_idx,
-            score,
-        )
+    def commit(self, screen, score, action_idx, predictions):
         self.commit_number += 1
-        self.db.insert(*commit)
+        self.db.insert(self.game_number,
+                       self.commit_number,
+                       screen.tostring(),
+                       action_idx,
+                       score,
+                       predictions)
 
     def _memory_from_commit(self, commit):
         prev_screen_text, action_idx, prev_score, next_score, next_screen_text = commit
