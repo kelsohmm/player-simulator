@@ -9,8 +9,6 @@ def loss_mse_for_known(y_true, y_pred):
 
 
 def create_network(preview_path):
-    print("--- STARTING LEARNING PROCESS ---")
-
     frame_input = K.Input(shape=CONV_SHAPE, name='frame_input')
 
     conv = K.layers.Conv2D(filters=32, kernel_size=8, strides=4, name='conv_1', input_shape=CONV_SHAPE, data_format='channels_last')(frame_input)

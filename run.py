@@ -20,8 +20,9 @@ if __name__ == '__main__':
         db = session.get_db()
         for _ in range(NO_GAMES):
             env.reset()
-            agent = NeuralNetworkAgent(model, Repo(db))
-            trainer = ModelTraining(model, Repo(db))
+            repo = Repo(db)
+            agent = NeuralNetworkAgent(model, repo)
+            trainer = ModelTraining(model, repo)
 
             Episode(agent, env, trainer.train).run()
             session.save_model()

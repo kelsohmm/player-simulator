@@ -52,7 +52,4 @@ class Repo:
         self.prev_screen = screen
         self.prev_action_idx = action_idx
 
-    def _postincremented_commit_number(self):
-        self.commit_number += 1
-        return self.commit_number - 1
 
