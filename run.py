@@ -1,7 +1,7 @@
 import logging
 from multiprocessing import freeze_support
 from config import NO_GAMES, SESSION_DIR
-from agents.neural_network_agent import NeuralNetworkAgent
+from agent.neural_network_agent import NeuralNetworkAgent
 from game.environment import make_env
 from game.episode import Episode
 from memory.gamestate_repo import Repo
