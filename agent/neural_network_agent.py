@@ -22,6 +22,3 @@ class NeuralNetworkAgent:
             return random.randint(0, 5)
         else:
             return predictions.argmax()
-
-    def finish(self, state, score):
-        self.repo.close()

@@ -27,9 +27,6 @@ class Repo:
         self.commit_number += 1
         self.db.insert_transition(*commit)
 
-    def close(self):
-        pass
-
     def _memory_from_commit(self, commit):
         prev_screen_text, action_idx, prev_score, next_score, next_screen_text = commit
         return self._screen_from_text(prev_screen_text), action_idx, prev_score, next_score, self._screen_from_text(next_screen_text)
