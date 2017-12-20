@@ -30,7 +30,7 @@ class Repo:
         commit = (
             self.game_number,
             self.commit_number,
-            self.prev_screen.as_matrix().tostring(),
+            self.prev_screen.tostring(),
             self.prev_action_idx,
             score,
         )

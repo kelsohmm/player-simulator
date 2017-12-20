@@ -19,7 +19,7 @@ class Episode:
         start_time = time.time()
         for i in itertools.count():
             state, reward, done, info = self.repeat_action(action_idx)
-            action_idx = self.agent.react_to_new_game_screen(state, reward)
+            action_idx = self.agent.react_to_new_game_screen(state.as_matrix(), reward)
             self.train_callback()
 
             logging.debug("Iter: %d, Score: %f, Time: %d", i, info['total_reward'], int(time.time() - start_time))
