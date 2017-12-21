@@ -31,7 +31,6 @@ class Episode:
         state = State()
         for _ in range(FRAMES_STACKED):
             screen, _reward, done, info = self.env.step(_MARIO_POSSIBLE_MOVES[action_idx])
-            print(info)
             score = info['total_reward']
             state.append(screen)
 
