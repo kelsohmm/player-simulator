@@ -26,7 +26,7 @@ class Database:
 
     def insert(self, game_id, state_id, state, action_idx, score, predictions):
         self.cursor.execute('INSERT INTO history (game_id, state_id, state, action_idx, score, pred1, pred2, pred3, pred4, pred5, pred6) '
-                            'VALUES (?,?,?,?,?, ?,?,?,?,?,?)', (game_id, state_id, Binary(state), int(action_idx), score, *predictions))
+                            'VALUES (?,?,?,?,?, ?,?,?,?,?,?)', (game_id, state_id, Binary(state), int(action_idx), score) + tuple(predictions))
         self.conn.commit()
 
     def get_free_game_id(self):

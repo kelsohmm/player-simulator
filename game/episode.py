@@ -22,7 +22,7 @@ class Episode:
             action_idx = self.agent.react_to_new_game_screen(state.as_matrix(), score)
             self.train_callback()
 
-            logging.debug("Iter: %d, Score: %f, Time: %d", i, info['score'], int(time.time() - start_time))
+            logging.debug("Iter: %d, Score: %f, Time: %d", i, info['total_reward'], int(time.time() - start_time))
             if done:
                 break
 
@@ -31,7 +31,8 @@ class Episode:
         state = State()
         for _ in range(FRAMES_STACKED):
             screen, _reward, done, info = self.env.step(_MARIO_POSSIBLE_MOVES[action_idx])
-            score = info['score']
+            print(info)
+            score = info['total_reward']
             state.append(screen)
 
             if done:
