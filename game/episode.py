@@ -24,6 +24,7 @@ class Episode:
 
             logging.debug("Iter: %d, Score: %f, Time: %d", i, info['total_reward'], int(time.time() - start_time))
             if done:
+                self.agent.finish()
                 break
 
     def repeat_action(self, action_idx):

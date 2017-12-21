@@ -1,6 +1,8 @@
 import numpy as np
 from config import CONV_SHAPE
 
+MIN_TO_COMMIT = 5
+
 
 class Repo:
     def __init__(self, database):
@@ -24,6 +26,12 @@ class Repo:
                        action_idx,
                        score,
                        predictions)
+
+    def close(self):
+        if self.commit_number > MIN_TO_COMMIT:
+            self.db.commit_changes()
+        else:
+            self.db.rollback_changes()
 
     def _memory_from_commit(self, commit):
         prev_screen_text, action_idx, prev_score, next_score, next_screen_text = commit
