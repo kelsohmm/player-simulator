@@ -13,13 +13,13 @@ class PlotBuilder:
         self._epoch_size = epoch_size
         self._data_view = data_view
 
-    def show_average_final_score_plot(self):
+    def show_final_scores_plot(self):
         data = self._data_view.get()\
-                .groupby(_groupby_chunk(self._epoch_size))['score']\
-                .mean()
+                .groupby('game_id')['score']\
+                .last()
         plot = data.plot()
 
-        self._show_window('Average final score per training epoch', self._get_plot_img(plot))
+        self._show_window('Final scores', self._get_plot_img(plot))
 
     def _show_window(self, window_name, img):
         cv2.imshow(window_name, img)

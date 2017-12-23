@@ -7,5 +7,5 @@ data_view = DataFrameView()
 chart = PlotBuilder(data_view)
 
 while True:
-    chart.show_average_final_score_plot()
+    chart.show_final_scores_plot()
     sleep(1)
