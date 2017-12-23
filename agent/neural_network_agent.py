@@ -13,7 +13,7 @@ class NeuralNetworkAgent:
         action_idx = self._choose_action_idx(predictions)
         self.repo.commit(state, score, action_idx, predictions.tolist()[0])
 
-        logging.debug('Rewards: %s, Chose: %s', str(predictions), action_idx)
+        logging.debug('AGENT:   Rewards: %s, Chose: %s', str(list(predictions)), action_idx)
         return action_idx
 
     def _choose_action_idx(self, predictions):

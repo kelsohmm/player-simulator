@@ -1,7 +1,9 @@
+import logging
+
 import numpy as np
 from config import BATCH_SIZE, DISCOUNT_FACTOR, CONV_SHAPE, MIN_MEMORIES
 
-END_GAME_REWARD = -5.0
+END_GAME_REWARD = -1.0
 
 
 class ModelTraining:
@@ -16,6 +18,7 @@ class ModelTraining:
             samples, labels = self._map_memories_to_train_data(memories)
             loss = self.model.train_on_batch(x=samples,
                                              y=labels)
+            logging.debug('TRAIN:    loss: %f, labels: %s' % (loss, str(list(labels.flatten()))))
             return loss
         else:
             return 0.
@@ -43,4 +46,4 @@ class ModelTraining:
         if next_score is None:
             return END_GAME_REWARD
         else:
-            return next_score - prev_score
+            return 1.0 if next_score > prev_score else 0.0

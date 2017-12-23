@@ -22,7 +22,7 @@ class Episode:
             action_idx = self.agent.react_to_new_game_screen(state.as_matrix(), score)
             self.train_callback()
 
-            logging.debug("Iter: %d, Score: %f, Time: %d", i, info['total_reward'], int(time.time() - start_time))
+            logging.debug("EPISODE: Iter: %d, Score: %f, Time: %d", i, info['total_reward'], int(time.time() - start_time))
             if done:
                 self.agent.finish()
                 break
