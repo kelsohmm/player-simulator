@@ -1,11 +1,11 @@
 from time import sleep
 from visualization.dataframe_view import DataFrameView
-from visualization.score_chart import ScoreChart
+from visualization.plot_builder import PlotBuilder
 
 data_view = DataFrameView()
 
-chart = ScoreChart(data_view)
+chart = PlotBuilder(data_view)
 
 while True:
-    chart.plot()
+    chart.show_average_final_score_plot()
     sleep(1)
