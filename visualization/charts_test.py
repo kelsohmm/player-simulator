@@ -1,16 +1,11 @@
 from time import sleep
-import numpy as np
-
+from visualization.dataframe_view import DataFrameView
 from visualization.score_chart import ScoreChart
 
-data1 = np.asarray(list(range(1, 10000)))
-data2 = np.asarray(list(range(500, 500000)))
+data_view = DataFrameView()
 
-chart = ScoreChart(data1)
+chart = ScoreChart(data_view)
 
-chart.plot()
-sleep(2)
-
-chart.append(data2)
-chart.plot()
-sleep(5)
+while True:
+    chart.plot()
+    sleep(1)
