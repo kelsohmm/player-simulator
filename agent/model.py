@@ -4,8 +4,12 @@ from config import CONV_SHAPE
 
 
 def loss_mse_for_known(y_true, y_pred):
-    replaced = tf.where(tf.is_nan(y_true), y_pred, y_true)
-    return K.backend.mean(K.backend.abs(replaced - y_pred), axis=-1)
+    nan_difference = y_pred - y_true
+    difference = tf.where(tf.is_nan(nan_difference), tf.zeros_like(y_pred), nan_difference)
+    sum = K.backend.sum(difference, axis=1)
+    res = K.backend.mean(K.backend.square(sum))
+    res = tf.Print(res, [res, y_true, y_pred, sum, difference], 'LOSS: ', summarize=7)
+    return res
 
 
 def create_network(preview_path):
@@ -26,7 +30,8 @@ def create_network(preview_path):
     model = K.models.Model(inputs=[frame_input],
                            outputs=output)
 
-    model.compile(optimizer=K.optimizers.Adam(lr=0.0001), loss=loss_mse_for_known)
+    model.compile(optimizer=K.optimizers.Adam(lr=0.00025, epsilon=0.01, decay=0.9),
+                  loss=loss_mse_for_known)
 
     try:
         K.utils.plot_model(model, show_shapes=True, to_file=preview_path)
