@@ -1,5 +1,6 @@
 import logging
 import random
+import numpy as np
 from config import CONV_SHAPE, MIN_MEMORIES, EXPLORATION_FACTOR
 
 
@@ -9,9 +10,9 @@ class NeuralNetworkAgent:
         self.repo = repo
 
     def react_to_new_game_screen(self, state, score):
-        predictions = self.model.predict(state.reshape((1,) + CONV_SHAPE))
+        predictions = self.predict_rewards(state)
         action_idx = self._choose_action_idx(predictions)
-        self.repo.commit(state, score, action_idx, predictions.tolist()[0])
+        self.repo.commit(state, score, action_idx, predictions.tolist())
 
         logging.debug('AGENT:   Chose: %s, Rewards: %s', str(action_idx), str(list(predictions.flatten())))
         return action_idx
@@ -24,3 +25,7 @@ class NeuralNetworkAgent:
 
     def finish(self):
         self.repo.close()
+
+    def predict_rewards(self, state):
+        raw_predicts = self.model.predict(state.reshape((1,) + CONV_SHAPE))
+        return np.concatenate(raw_predicts).flatten()

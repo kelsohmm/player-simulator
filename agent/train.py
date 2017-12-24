@@ -10,16 +10,16 @@ class ModelTraining:
     def __init__(self, model, memories_repo):
         self.model = model
         self.repo = memories_repo
-        self.no_outputs = 6
+        self.no_outputs = len(model.outputs)
 
     def train(self):
         if self.repo.size() > MIN_MEMORIES:
             memories = self.repo.get_commits_batch(BATCH_SIZE)
             samples, labels = self._map_memories_to_train_data(memories)
-            loss = self.model.train_on_batch(x=samples,
-                                             y=labels)
-            logging.debug('TRAIN:    loss: %f, labels: %s' % (loss, str(list(labels.flatten()))))
-            return loss
+            losses = self.model.train_on_batch(x=samples,
+                                               y=np.split(labels, self.no_outputs, axis=1))
+            logging.debug('TRAIN:    losses: %s, labels: %s' % (str(losses), str(list(labels.flatten()))))
+            return losses
         else:
             return 0.
 
@@ -37,7 +37,7 @@ class ModelTraining:
 
     def _highest_reward(self, next_screen):
         if next_screen is not None:
-            predictions = self.model.predict(next_screen.reshape((1,) + CONV_SHAPE))
+            predictions = np.concatenate(self.model.predict(next_screen.reshape((1,) + CONV_SHAPE))).flatten()
             return predictions.max()
         else:
             return 0.0

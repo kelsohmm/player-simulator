@@ -4,8 +4,11 @@ from config import CONV_SHAPE
 
 
 def loss_mse_for_known(y_true, y_pred):
-    replaced = tf.where(tf.is_nan(y_true), y_pred, y_true)
-    return K.backend.mean(K.backend.abs(replaced - y_pred), axis=-1)
+    nan_difference = y_true - y_pred
+    difference = tf.where(tf.is_nan(nan_difference), tf.zeros_like(y_pred), nan_difference)
+    res = K.backend.mean(K.backend.abs(difference), axis=0)
+    # res = tf.Print(res, [res, y_true, y_pred, nan_difference, difference], 'LOSS: ', summarize=5)
+    return res
 
 
 def create_network(preview_path):
@@ -21,10 +24,12 @@ def create_network(preview_path):
     hidden = K.layers.Dense(512, activation='relu', name='hidden_1')(concat)
     hidden = K.layers.Dense(512, activation='relu', name='hidden_2')(hidden)
 
-    output = K.layers.Dense(6, name='output')(hidden)
+    output_names = ["output_%d" % i for i in range(6)]
+    output_layers = [K.layers.Dense(1, name=name)(hidden)
+                     for name in output_names]
 
     model = K.models.Model(inputs=[frame_input],
-                           outputs=output)
+                           outputs=output_layers)
 
     model.compile(optimizer=K.optimizers.Adam(lr=0.0001), loss=loss_mse_for_known)
 
