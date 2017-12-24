@@ -9,7 +9,6 @@ _SELECT_MEMORY_QUERY = '''
     FROM history AS prev_memories
     LEFT JOIN history AS next_memories
     ON prev_memories.game_id = next_memories.game_id AND next_memories.state_id = (prev_memories.state_id + 1)
-    WHERE prev_memories.action_idx = %d
     ORDER BY RANDOM() 
     LIMIT %d
 '''
@@ -22,8 +21,8 @@ class Database:
     def size(self):
         return self._query_history_count()
 
-    def fetch_by_action_idx(self, action_idx, batch_size):
-        return list(self.cursor.execute(_SELECT_MEMORY_QUERY % (action_idx, batch_size)))
+    def fetch_random_batch(self, batch_size):
+        return list(self.cursor.execute(_SELECT_MEMORY_QUERY % batch_size))
 
     def insert(self, game_id, state_id, state, action_idx, score, predictions):
         self.cursor.execute('INSERT INTO history (game_id, state_id, state, action_idx, score, pred1, pred2, pred3, pred4, pred5, pred6) '

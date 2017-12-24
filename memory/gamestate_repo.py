@@ -10,14 +10,13 @@ class Repo:
         self.initial_db_size = self.db.size()
         self.game_number = self.db.get_free_game_id()
         self.commit_number = 0
-        self.last_action_idx = 0
 
     def size(self):
         return self.initial_db_size + self.commit_number
 
     def get_commits_batch(self, batch_size):
         return list(map(self._memory_from_commit,
-                        self.db.fetch_by_action_idx(self.last_action_idx, batch_size)))
+                        self.db.fetch_random_batch(batch_size)))
 
     def commit(self, screen, score, action_idx, predictions):
         self.commit_number += 1
@@ -27,7 +26,6 @@ class Repo:
                        action_idx,
                        score,
                        predictions)
-        self.last_action_idx = action_idx
 
     def close(self):
         if self.commit_number > MIN_TO_COMMIT:
