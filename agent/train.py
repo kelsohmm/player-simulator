@@ -46,4 +46,4 @@ class ModelTraining:
         if next_score is None:
             return END_GAME_REWARD
         else:
-            return 1.0 if next_score > prev_score else 0.0
+            np.sign(next_score - prev_score)
