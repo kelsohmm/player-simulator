@@ -10,7 +10,6 @@ import gym_pull
 class EnvWrapper:
     def __enter__(self):
         self.env = gym.make('SuperMarioBros-1-1-v0')
-        self.env.reset()
         return self.env
 
     def __exit__(self, type, value, traceback):
