@@ -8,4 +8,5 @@ chart = PlotBuilder(data_view)
 
 while True:
     chart.show_final_scores_plot()
+    chart.show_move_usage_distribution_per_distance()
     sleep(1)

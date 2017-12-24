@@ -21,6 +21,17 @@ class PlotBuilder:
 
         self._show_window('Final scores', self._get_plot_img(plot))
 
+    def show_move_usage_distribution_per_distance(self):
+        data = self._data_view.get() \
+            .round({'score': 0})\
+            .groupby(['score'])['action_idx']\
+            .count()
+        data.describe()
+        plot = data.plot.area()
+
+        self._show_window('Move usage distribution', self._get_plot_img(plot))
+
+
     def _show_window(self, window_name, img):
         cv2.imshow(window_name, img)
         cv2.waitKey(20)
