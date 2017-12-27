@@ -5,7 +5,7 @@ from gui.controller import Controller
 def main():
 
     root = tk.Tk()
-    app = Controller()
+    app = Controller(r"C:\Users\Bogusz\inzynierka\player-simulator\saved_sessions\session1")
     root.mainloop()
 
 

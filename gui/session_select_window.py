@@ -1,5 +1,5 @@
 import tkinter as tk
-from session import Session, verify_session_path
+from session import verify_session_path
 
 _SELECT_WINDOW_TEXT = '''
 Welcome to Player-Simulator!
