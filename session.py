@@ -1,19 +1,31 @@
-import sqlite3
-
-from agent.model import create_network, load_model
-from config import *
 from memory.database import Database
 from memory.db_commands import commit_db_schema
+import os
 
+PREVIEW_FILENAME = 'model_preview.png'
 DB_FILENAME = 'history.db'
+MODEL_FILENAME = 'model.h5'
+
+
+def verify_session_path(session_path):
+    model_path = os.path.join(session_path, MODEL_FILENAME)
+    db_path = os.path.join(session_path, DB_FILENAME)
+    try:
+        return len(os.listdir(session_path)) == 0\
+               or (os.path.exists(model_path) and os.path.exists(db_path))
+    except:
+        return False
 
 class Session:
     def __init__(self, session_path):
         self.session_path = session_path
-        self.model_path = os.path.join(session_path, 'model.h5')
+        self.model_path = os.path.join(session_path, MODEL_FILENAME)
+        self.db_path = os.path.join(self.session_path, DB_FILENAME)
 
     def __enter__(self):
-        if os.path.exists(self.session_path):
+        import sqlite3
+        self.db_conn = sqlite3.connect(self.db_path)
+        if len(os.listdir(self.session_path)) > 0:
             self._open_existing()
         else:
             self._open_new()
@@ -35,13 +47,12 @@ class Session:
         self.model.save(self.model_path)
 
     def _open_existing(self):
-        self.db_conn = sqlite3.connect(os.path.join(self.session_path, DB_FILENAME))
+        from agent.model import load_model
         self.model = load_model(self.model_path)
 
     def _open_new(self):
-        os.makedirs(self.session_path)
-        self.db_conn = sqlite3.connect(os.path.join(self.session_path, DB_FILENAME))
+        from agent.model import create_network
         commit_db_schema(self.db_conn)
-        self.model = create_network(os.path.join(self.session_path, 'model_preview.png'))
+        self.model = create_network(os.path.join(self.session_path, PREVIEW_FILENAME))
         self.save_model()
 

@@ -6,7 +6,7 @@ def main():
 
     root = tk.Tk()
     root.geometry("300x200+300+300")
-    app = SessionSelectWindow()
+    app = SessionSelectWindow(lambda session: None)
     root.mainloop()
 
 

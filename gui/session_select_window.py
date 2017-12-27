@@ -1,4 +1,5 @@
 import tkinter as tk
+from session import Session, verify_session_path
 
 _SELECT_WINDOW_TEXT = '''
 Welcome to Player-Simulator!
@@ -6,6 +7,9 @@ Select a path with existing session to reopen,
 or empty directory to initialize new session!
 '''
 
+def show_error(message):
+    from tkinter import messagebox
+    messagebox.showerror('Error', message)
 
 def _select_dir_popup():
     from tkinter import filedialog
@@ -14,11 +18,10 @@ def _select_dir_popup():
 
 class SessionSelectWindow(tk.Frame):
 
-    def __init__(self):
+    def __init__(self, callback):
         super().__init__(padx=3)
-
         self.path_var = tk.StringVar()
-
+        self.callback = callback
         self.initUI()
 
 
@@ -41,8 +44,15 @@ class SessionSelectWindow(tk.Frame):
 
         self.pack(fill=tk.BOTH, expand=True)
 
-        okButton = tk.Button(self, text="Open session")
-        okButton.pack(side=tk.RIGHT, fill=tk.X)
+        ok_button = tk.Button(self, text="Open session", command=self._create_session)
+        ok_button.pack(side=tk.RIGHT, fill=tk.X)
 
     def select_path(self):
         self.path_var.set(_select_dir_popup())
+
+    def _create_session(self):
+        path = self.path_var.get()
+        if verify_session_path(path):
+            self.callback(path)
+        else:
+            show_error("Select empty directory to create a new session, or reopen existing session directory.")
