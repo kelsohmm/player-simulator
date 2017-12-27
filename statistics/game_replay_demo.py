@@ -1,7 +1,7 @@
 import cv2
 
-from visualization.game_frames_view import GameFramesView
-from visualization.game_replay import GameReplay
+from statistics.game_frames_view import GameFramesView
+from statistics.game_replay import GameReplay
 
 game_id = 14
 view = GameFramesView()

@@ -1,6 +1,6 @@
 from time import sleep
-from visualization.dataframe_view import DataFrameView
-from visualization.plot_builder import PlotBuilder
+from statistics.dataframe_view import DataFrameView
+from statistics.plot_builder import PlotBuilder
 
 data_view = DataFrameView()
 
