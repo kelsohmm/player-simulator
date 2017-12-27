@@ -1,7 +1,8 @@
 import tkinter as tk
 
-class SessionWindow(tk.Frame):
 
+
+class SessionWindow(tk.Frame):
     def __init__(self, numerical_stats, overall_stats_callback):
         super().__init__(padx=3)
         self.stat_vars = self.create_stat_vars(numerical_stats)

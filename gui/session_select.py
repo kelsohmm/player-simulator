@@ -15,6 +15,18 @@ def _select_dir_popup():
     from tkinter import filedialog
     return filedialog.askdirectory()
 
+class SessionSelectController:
+    def __init__(self, session_selected_callback):
+        self.callback = session_selected_callback
+        self.window = SessionSelectWindow(self._session_selected)
+
+    def _session_selected(self, path):
+        if verify_session_path(path):
+            self.window.quit()
+            self.window = None
+            self.callback(path)
+        else:
+            show_error("Select empty directory to create a new session, or reopen existing session directory.")
 
 class SessionSelectWindow(tk.Frame):
 
@@ -51,11 +63,7 @@ class SessionSelectWindow(tk.Frame):
         self.path_var.set(_select_dir_popup())
 
     def _create_session(self):
-        path = self.path_var.get()
-        if verify_session_path(path):
-            self.callback(path)
-        else:
-            show_error("Select empty directory to create a new session, or reopen existing session directory.")
+        self.callback(self.path_var.get())
 
     def quit(self):
         self._root().destroy()
