@@ -1,4 +1,3 @@
-import sqlite3
 import pandas as pd
 
 _HISTORY_VIEW_COLUMNS = ['game_id',
