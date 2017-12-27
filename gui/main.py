@@ -1,12 +1,11 @@
 import tkinter as tk
-from gui.session_select_window import SessionSelectWindow
+from gui.controller import Controller
 
 
 def main():
 
     root = tk.Tk()
-    root.geometry("300x200+300+300")
-    app = SessionSelectWindow(lambda session: None)
+    app = Controller()
     root.mainloop()
 
 

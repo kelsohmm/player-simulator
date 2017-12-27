@@ -56,3 +56,6 @@ class SessionSelectWindow(tk.Frame):
             self.callback(path)
         else:
             show_error("Select empty directory to create a new session, or reopen existing session directory.")
+
+    def quit(self):
+        self._root().destroy()
