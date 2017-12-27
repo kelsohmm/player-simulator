@@ -1,5 +1,8 @@
 import sqlite3
 
+import numpy as np
+
+from gui.charts_window import ChartsWindow
 from gui.session_select_window import SessionSelectWindow
 from gui.session_window import SessionWindow
 from memory.db_commands import get_max_game_id, get_db_size, get_max_state_id, get_max_score
@@ -21,7 +24,7 @@ class ProgramController:
     def open_session_window(self, session_path):
         self.session = Session(session_path)
         self.db_conn = sqlite3.connect(self.session.db_path)
-        self._current_window = SessionWindow(self._create_overall_stats())
+        self._current_window = SessionWindow(self._create_overall_stats(), self._open_charts_window)
 
     def _create_overall_stats(self):
         stats = {
@@ -31,3 +34,7 @@ class ProgramController:
             'Best score': get_max_score(self.db_conn),
         }
         return stats
+
+    def _open_charts_window(self):
+        array = np.zeros((256, 256, 3), dtype=np.ubyte)
+        ChartsWindow('charts', {'abc': array})

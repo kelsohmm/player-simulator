@@ -2,9 +2,10 @@ import tkinter as tk
 
 class SessionWindow(tk.Frame):
 
-    def __init__(self, numerical_stats):
+    def __init__(self, numerical_stats, overall_stats_callback):
         super().__init__(padx=3)
         self.stat_vars = self.create_stat_vars(numerical_stats)
+        self.overall_stats_callback = overall_stats_callback
         self.initUI()
 
     def create_stat_vars(self, numerical_stats):
@@ -36,7 +37,7 @@ class SessionWindow(tk.Frame):
 
         stats_frame.pack(fill=tk.X)
 
-        statistics_button = tk.Button(overview_subframe, text="Show charts", command=lambda: print("open stats clicked!"))
+        statistics_button = tk.Button(overview_subframe, text="Show charts", command=self.overall_stats_callback)
         statistics_button.pack(fill=tk.X)
 
         overview_subframe.pack(side=tk.LEFT)
