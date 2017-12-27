@@ -16,8 +16,8 @@ _SELECT_HISTORY_QUERY = 'SELECT %s FROM history ORDER BY game_id ASC, state_id A
 
 
 class StatisticsView:
-    def __init__(self):
-        self.conn = sqlite3.connect('saved_sessions/session1/history.db')
+    def __init__(self, conn):
+        self.conn = conn
         self.cursor = self.conn.cursor()
         self.cursor.execute(_SELECT_HISTORY_QUERY)
         self.data = pd.DataFrame([], columns=_HISTORY_VIEW_COLUMNS)

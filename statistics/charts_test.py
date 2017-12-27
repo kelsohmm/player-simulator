@@ -1,8 +1,11 @@
+import sqlite3
 from time import sleep
 from statistics.statistics_view import StatisticsView
 from statistics.plot_builder import PlotBuilder
 
-data_view = StatisticsView()
+
+conn = sqlite3.connect('saved_sessions/session1/history.db')
+data_view = StatisticsView(conn)
 
 chart = PlotBuilder(data_view)
 
