@@ -12,7 +12,28 @@ _DATABASE_SCHEMA = '''
     ); 
 '''
 
-def commit_db_schema(connection):
-    cursor = connection.cursor()
-    cursor.execute(_DATABASE_SCHEMA)
-    connection.commit()
+def commit_db_schema(conn):
+    conn.execute(_DATABASE_SCHEMA)
+    conn.commit()
+
+
+def get_max_game_id(conn):
+    res = conn.execute('SELECT MAX(game_id) FROM history')
+    (max_game_id, ) = list(res)[0]
+    return max_game_id if max_game_id is not None else 0
+
+
+def get_db_size(conn):
+    res = conn.execute('SELECT COUNT(*) FROM history')
+    (count, ) = list(res)[0]
+    return count if count is not None else 0
+
+def get_max_state_id(conn):
+    res = conn.execute('SELECT MAX(state_id) FROM history')
+    (max_state_id, ) = list(res)[0]
+    return max_state_id if max_state_id is not None else 0
+
+def get_max_score(conn):
+    res = conn.execute('SELECT MAX(score) FROM history')
+    (max_score, ) = list(res)[0]
+    return max_score if max_score is not None else 0

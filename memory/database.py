@@ -1,4 +1,5 @@
 from sqlite3 import Binary
+from memory.db_commands import get_max_game_id, get_db_size
 
 _SELECT_MEMORY_QUERY = '''
     SELECT prev_memories.state,
@@ -35,11 +36,7 @@ class Database:
         self.conn.commit()
 
     def get_free_game_id(self):
-        res = self.cursor.execute('SELECT MAX(game_id) FROM history')
-        (max_game_id, ) = list(res)[0]
-        return max_game_id+1 if max_game_id is not None else 0
+        return get_max_game_id(self.conn) + 1
 
     def _query_history_count(self):
-        res = self.cursor.execute('SELECT COUNT(*) FROM history')
-        (count, ) = list(res)[0]
-        return count if count is not None else 0
+        return get_db_size(self.conn)
