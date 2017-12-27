@@ -1,8 +1,8 @@
 from time import sleep
-from statistics.dataframe_view import DataFrameView
+from statistics.statistics_view import StatisticsView
 from statistics.plot_builder import PlotBuilder
 
-data_view = DataFrameView()
+data_view = StatisticsView()
 
 chart = PlotBuilder(data_view)
 
