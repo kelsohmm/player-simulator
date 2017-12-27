@@ -13,23 +13,27 @@ class PlotBuilder:
         self._epoch_size = epoch_size
         self._data_view = data_view
 
-    def show_final_scores_plot(self):
+    def get_final_scores_plot(self):
         data = self._data_view.get()\
                 .groupby('game_id')['score']\
                 .last()
         plot = data.plot()
+        return self._get_plot_img(plot)
 
-        self._show_window('Final scores', self._get_plot_img(plot))
+    def show_final_scores_plot(self):
+        self._show_window('Final scores', self.get_final_scores_plot())
 
-    def show_move_usage_distribution_per_distance(self):
+    def get_move_usage_distribution_per_distance(self):
         data = self._data_view.get() \
             .round({'score': 0})\
             .groupby(['score'])['action_idx']\
             .count()
         data.describe()
         plot = data.plot.area()
+        return self._get_plot_img(plot)
 
-        self._show_window('Move usage distribution', self._get_plot_img(plot))
+    def show_move_usage_distribution_per_distance(self):
+        self._show_window('Move usage distribution', self.get_move_usage_distribution_per_distance())
 
 
     def _show_window(self, window_name, img):
