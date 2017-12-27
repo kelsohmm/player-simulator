@@ -1,11 +1,11 @@
 import tkinter as tk
-from gui.controller import Controller
+from gui.program_controller import ProgramController
 
 
 def main():
 
     root = tk.Tk()
-    app = Controller(r"C:\Users\Bogusz\inzynierka\player-simulator\saved_sessions\session1")
+    app = ProgramController(r"C:\Users\Bogusz\inzynierka\player-simulator\saved_sessions\session1")
     root.mainloop()
 
 

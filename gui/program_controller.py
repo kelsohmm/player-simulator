@@ -6,7 +6,7 @@ from memory.db_commands import get_max_game_id, get_db_size, get_max_state_id, g
 from session import Session
 
 
-class Controller:
+class ProgramController:
     def __init__(self, session_path=None):
         self.session = None
         if session_path is None:
