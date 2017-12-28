@@ -8,12 +8,12 @@ class ChartsWindow(tk.Toplevel):
         super(ChartsWindow, self).__init__()
         self.title(window_name)
 
-        chart_widgets = [ChartWidget(self, chart_name, charts[chart_name])
-                         for chart_name in charts.keys()]
+        self.chart_widgets = [ChartWidget(self, chart_name, charts[chart_name])
+                              for chart_name in charts.keys()]
 
         curr_col = 0
         curr_row = 0
-        for chart in chart_widgets:
+        for chart in self.chart_widgets:
             chart.grid(row=curr_row, column=curr_col)
 
             curr_col += 1

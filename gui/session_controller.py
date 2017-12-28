@@ -16,7 +16,7 @@ class SessionController:
         self.window = SessionWindow(self._create_overall_stats(), self._open_charts_window)
 
     def _open_charts_window(self):
-        ChartsWindow('charts', {
+        self.charts_window = ChartsWindow('charts', {
             'move usage distribution per distance': self.charts_builder.get_move_usage_distribution_per_distance(),
             'final scores': self.charts_builder.get_final_scores_plot()
         })

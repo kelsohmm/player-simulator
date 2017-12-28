@@ -2,7 +2,7 @@ import tkinter as tk
 
 
 
-class SessionWindow(tk.Frame):
+class SessionWindow(tk.Toplevel):
     def __init__(self, numerical_stats, overall_stats_callback):
         super().__init__(padx=3)
         self.stat_vars = self.create_stat_vars(numerical_stats)
@@ -16,12 +16,10 @@ class SessionWindow(tk.Frame):
         }
 
     def initUI(self):
-        self.master.title("Player Simulator - session overview")
+        self.title("Player Simulator - session overview")
 
         self.init_sessions_overview()
         self.init_session_details()
-
-        self.pack(fill=tk.BOTH, expand=True)
 
 
     def quit(self):
