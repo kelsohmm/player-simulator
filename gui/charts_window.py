@@ -1,22 +1,19 @@
-import tkinter as tk
-
-from gui.chart_widget import ChartWidget
+import matplotlib.pyplot as plt
 
 
-class ChartsWindow(tk.Toplevel):
-    def __init__(self, window_name, charts, columns=3):
-        super(ChartsWindow, self).__init__()
-        self.title(window_name)
+class ChartsWindow:
+    def __init__(self, window_name, chart_builders, nrows=2, ncols=2):
+        fig, axes = plt.subplots(nrows=nrows, ncols=ncols, num=window_name)
 
-        self.chart_widgets = [ChartWidget(self, chart_name, charts[chart_name])
-                              for chart_name in charts.keys()]
+        col = 0
+        row = 0
+        for chart_name in chart_builders.keys():
+            axes[row, col].set_title(chart_name)
+            chart_builders[chart_name](ax=axes[row, col])
 
-        curr_col = 0
-        curr_row = 0
-        for chart in self.chart_widgets:
-            chart.grid(row=curr_row, column=curr_col)
+            col += 1
+            if col >= ncols:
+                col = 0
+                row += 1
 
-            curr_col += 1
-            if curr_col >= columns:
-                curr_row += 1
-                curr_col = 0
+        plt.show()
