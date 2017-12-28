@@ -3,6 +3,7 @@ import numpy as np
 from gui.charts_window import ChartsWindow
 from gui.session_window import SessionWindow
 from session import Session
+from statistics.plot_builder import PlotBuilder
 from statistics.statistics_view import StatisticsView
 
 
@@ -11,11 +12,14 @@ class SessionController:
         self.session = Session(session_path)
         self.db_conn = sqlite3.connect(self.session.db_path)
         self.data_view = StatisticsView(self.db_conn)
+        self.charts_builder = PlotBuilder(self.data_view)
         self.window = SessionWindow(self._create_overall_stats(), self._open_charts_window)
 
     def _open_charts_window(self):
-        array = np.zeros((256, 256, 3), dtype=np.ubyte)
-        ChartsWindow('charts', {'abc': array})
+        ChartsWindow('charts', {
+            'move usage distribution per distance': self.charts_builder.get_move_usage_distribution_per_distance(),
+            'final scores': self.charts_builder.get_final_scores_plot()
+        })
 
     def _create_overall_stats(self):
         stats = {
