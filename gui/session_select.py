@@ -1,4 +1,6 @@
 import tkinter as tk
+
+from gui.utils import show_error
 from session import verify_session_path
 
 _SELECT_WINDOW_TEXT = '''
@@ -6,10 +8,6 @@ Welcome to Player-Simulator!
 Select a path with existing session to reopen,
 or empty directory to initialize new session!
 '''
-
-def show_error(message):
-    from tkinter import messagebox
-    messagebox.showerror('Error', message)
 
 def _select_dir_popup():
     from tkinter import filedialog

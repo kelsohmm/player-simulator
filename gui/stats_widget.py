@@ -10,6 +10,10 @@ class StatsWidget(tk.Frame):
             tk.Label(self, text=str(key)).grid(row=idx, column=0)
             tk.Label(self, textvariable=self.stat_vars[key]).grid(row=idx, column=1)
 
+    def update_stats(self, new_stats):
+        for var_name in self.stat_vars.keys():
+            if var_name in new_stats:
+                self.stat_vars[var_name].set(new_stats[var_name])
 
     def _create_stat_vars(self, stats):
         return {
