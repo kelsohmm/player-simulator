@@ -41,8 +41,7 @@ class SessionController:
 
 
     def _create_game_stats(self, game_id):
-        data = self.data_view.get()
-        data = data.loc[data['game_id'] == game_id]
+        data = self.data_view.get_for_game(game_id)
         return self._game_stats_dict(game_id, data['state_id'].max(), data['score'].max())
 
     def _game_stats_dict(self, game_id, game_length, final_score):

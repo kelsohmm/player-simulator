@@ -11,9 +11,7 @@ class PlotBuilder:
         self._data_view = data_view
 
     def plot_game_score(self, game_id, ax):
-        data = self._data_view.get()
-        data = data.loc[data['game_id'] == game_id]
-        data['score'].plot(ax=ax)
+        self._data_view.get_for_game(game_id)['score'].plot(ax=ax)
 
 
     def plot_final_scores(self, ax):

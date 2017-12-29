@@ -25,6 +25,10 @@ class StatisticsView:
         self._update()
         return self.data
 
+    def get_for_game(self, game_id):
+        data = self.get()
+        return data.loc[data['game_id'] == game_id]
+
     def _update(self):
         records = self.cursor.fetchall()
         if len(records) > 0:
