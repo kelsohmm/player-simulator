@@ -1,11 +1,15 @@
+import os
 import tkinter as tk
 from gui.game_replay import GameReplay
 
+PLAY_ICON = os.path.join('gui', 'resources', 'play.png')
+PAUSE_ICON = os.path.join('gui', 'resources', 'pause.png')
+STOP_ICON = os.path.join('gui', 'resources', 'stop.png')
 
 class ReplayMediaPlayer(tk.Toplevel):
     REFRESH_TIME_MS = 20
-    WIDTH = 300
-    HEIGHT = 300
+    WIDTH = 256
+    HEIGHT = 256
 
     def __init__(self, game_frames):
         super().__init__()
@@ -14,12 +18,21 @@ class ReplayMediaPlayer(tk.Toplevel):
         self.replay.play()
 
         self._initUI()
-        self.update_image_label()
+        self.update_view()
 
-    def update_image_label(self):
+    def update_view(self):
         self.image_label.configure(image=self.replay.get_frame())
-        self.after(self.REFRESH_TIME_MS, self.update_image_label)
+        self.after(self.REFRESH_TIME_MS, self.update_view)
 
     def _initUI(self):
         self.image_label = tk.Label(self, image=self.replay.get_frame())
         self.image_label.pack(fill=tk.BOTH)
+
+        self.play_photo = tk.PhotoImage(file=PLAY_ICON).subsample(2)
+        tk.Button(self, image=self.play_photo, command=self.replay.play).pack(side=tk.LEFT)
+
+        self.pause_photo = tk.PhotoImage(file=PAUSE_ICON).subsample(2)
+        tk.Button(self, image=self.pause_photo, command=self.replay.pause).pack(side=tk.LEFT)
+
+        self.stop_photo = tk.PhotoImage(file=STOP_ICON).subsample(2)
+        tk.Button(self, image=self.stop_photo, command=self.replay.stop).pack(side=tk.LEFT)
