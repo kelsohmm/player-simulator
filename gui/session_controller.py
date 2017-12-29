@@ -1,8 +1,10 @@
 import sqlite3
 from gui.charts_window import ChartsWindow
+from gui.replay_media_player import ReplayMediaPlayer
 from gui.session_window import SessionWindow
 from gui.utils import show_error
 from session import Session
+from statistics.game_frames_view import GameFramesView
 from statistics.plot_builder import PlotBuilder
 from statistics.statistics_view import StatisticsView
 
@@ -11,12 +13,19 @@ class SessionController:
     def __init__(self, session_path):
         self.session = Session(session_path)
         self.db_conn = sqlite3.connect(self.session.db_path)
+        self.frames_view = GameFramesView(self.db_conn)
         self.data_view = StatisticsView(self.db_conn)
         self.charts_builder = PlotBuilder(self.data_view)
         self.game_id = None
         initial_game_stats = self._game_stats_dict('Not selected', 'None', 'None')
         self.window = SessionWindow(self._create_overall_stats(), initial_game_stats,
-                                    self._open_overall_charts_window, self._game_id_selected, self._open_game_charts_window)
+                                    self._open_overall_charts_window, self._game_id_selected, self._open_game_charts_window, self._open_replay_window)
+
+    def _open_replay_window(self):
+        if self.game_id is not None:
+            ReplayMediaPlayer(self.frames_view.get_for_game_id(self.game_id))
+        else:
+            show_error('Game not selected.')
 
     def _open_game_charts_window(self):
         if self.game_id is not None:

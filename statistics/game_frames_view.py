@@ -6,8 +6,8 @@ _SELECT_HISTORY_QUERY = 'SELECT state FROM history WHERE game_id = %d ORDER BY s
 
 
 class GameFramesView:
-    def __init__(self):
-        self.conn = sqlite3.connect('saved_sessions/session1/history.db')
+    def __init__(self, conn):
+        self.conn = conn
         self.cursor = self.conn.cursor()
 
     def get_for_game_id(self, game_id):

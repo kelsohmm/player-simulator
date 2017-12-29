@@ -1,12 +1,15 @@
 from time import time
 import cv2
+from PIL import Image, ImageTk
 
 
 class GameReplay:
     SECONDS_PER_FRAME = 1/30
 
-    def __init__(self, game_frames):
-        self.frames = [cv2.cvtColor(frame, cv2.COLOR_GRAY2RGB)
+    def __init__(self, game_frames, width, height):
+        self.frames = [ImageTk.PhotoImage(
+                        Image.fromarray(
+                         cv2.resize(cv2.cvtColor(frame, cv2.COLOR_GRAY2RGB), (width, height))))
                        for frame in game_frames]
         self.speed = 1.0
         self.stop()
@@ -26,7 +29,7 @@ class GameReplay:
 
     def get_frame(self):
         if self.last_time is None:
-            self.play()
+            return self.frames[self.curr_frame]
 
         new_time = time()
         time_diff = new_time - self.last_time
