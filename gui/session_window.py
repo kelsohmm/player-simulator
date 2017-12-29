@@ -28,7 +28,7 @@ class SessionWindow(tk.Toplevel):
         stats_widget = StatsWidget(overview_subframe, stats)
         stats_widget.pack(fill=tk.X)
 
-        statistics_button = tk.Button(overview_subframe, text="Show charts", command=self.overall_stats_callback)
+        statistics_button = tk.Button(overview_subframe, text="Show overall charts", command=self.overall_stats_callback)
         statistics_button.pack(fill=tk.X)
 
         overview_subframe.pack(side=tk.LEFT)
@@ -47,5 +47,11 @@ class SessionWindow(tk.Toplevel):
 
         self.game_stats_widget = StatsWidget(detail_subframe, stats)
         self.game_stats_widget.pack(fill=tk.X)
+
+        statistics_button = tk.Button(detail_subframe, text="Show game charts", command=lambda: print("show charts clicked!"))
+        statistics_button.pack(fill=tk.X)
+
+        replay_button = tk.Button(detail_subframe, text="Show game replay", command=lambda: print("replay clicked!"))
+        replay_button.pack(fill=tk.X)
 
         detail_subframe.pack(side=tk.LEFT)
