@@ -13,19 +13,29 @@ class SessionController:
         self.db_conn = sqlite3.connect(self.session.db_path)
         self.data_view = StatisticsView(self.db_conn)
         self.charts_builder = PlotBuilder(self.data_view)
+        self.game_id = None
         initial_game_stats = self._game_stats_dict('Not selected', 'None', 'None')
         self.window = SessionWindow(self._create_overall_stats(), initial_game_stats,
-                                    self._open_charts_window, self._game_id_selected)
+                                    self._open_overall_charts_window, self._game_id_selected, self._open_game_charts_window)
 
-    def _open_charts_window(self):
-        self.charts_window = ChartsWindow('charts', {
+    def _open_game_charts_window(self):
+        if self.game_id is not None:
+            ChartsWindow('charts', {
+                'move usage distribution per distance': lambda ax: self.charts_builder.plot_game_score(self.game_id, ax),
+            })
+        else:
+            show_error('Game not selected.')
+
+    def _open_overall_charts_window(self):
+        ChartsWindow('charts', {
             'move usage distribution per distance': self.charts_builder.plot_move_usage_distribution_per_distance,
             'final scores': self.charts_builder.plot_final_scores
         })
 
     def _game_id_selected(self, game_id):
         if len(game_id) > 0 and int(game_id) in self.data_view.get()['game_id'].unique():
-            self.window.set_game_details(self._create_game_stats(int(game_id)))
+            self.game_id = int(game_id)
+            self.window.set_game_details(self._create_game_stats(self.game_id))
         else:
             show_error('Game id not found.')
 

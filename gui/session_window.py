@@ -4,10 +4,11 @@ from gui.stats_widget import StatsWidget
 
 
 class SessionWindow(tk.Toplevel):
-    def __init__(self, overall_stats, game_stats, overall_stats_callback, select_game_callback):
+    def __init__(self, overall_stats, game_stats, overall_stats_callback, select_game_callback, game_stats_callback):
         super().__init__(padx=3)
         self.overall_stats_callback = overall_stats_callback
         self.select_game_callback = select_game_callback
+        self.game_stats_callback = game_stats_callback
         self.initUI(overall_stats, game_stats)
 
     def initUI(self, overall_stats, game_stats):
@@ -48,7 +49,7 @@ class SessionWindow(tk.Toplevel):
         self.game_stats_widget = StatsWidget(detail_subframe, stats)
         self.game_stats_widget.pack(fill=tk.X)
 
-        statistics_button = tk.Button(detail_subframe, text="Show game charts", command=lambda: print("show charts clicked!"))
+        statistics_button = tk.Button(detail_subframe, text="Show game charts", command=self.game_stats_callback)
         statistics_button.pack(fill=tk.X)
 
         replay_button = tk.Button(detail_subframe, text="Show game replay", command=lambda: print("replay clicked!"))

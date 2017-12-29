@@ -10,6 +10,12 @@ class PlotBuilder:
         self._epoch_size = epoch_size
         self._data_view = data_view
 
+    def plot_game_score(self, game_id, ax):
+        data = self._data_view.get()
+        data = data.loc[data['game_id'] == game_id]
+        data['score'].plot(ax=ax)
+
+
     def plot_final_scores(self, ax):
         data = self._data_view.get()\
                 .groupby('game_id')['score']\
