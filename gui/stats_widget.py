@@ -13,6 +13,6 @@ class StatsWidget(tk.Frame):
 
     def _create_stat_vars(self, stats):
         return {
-            key: tk.DoubleVar(value=stats[key])
+            key: tk.StringVar(value=stats[key])
             for key in stats.keys()
         }

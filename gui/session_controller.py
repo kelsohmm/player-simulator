@@ -25,10 +25,11 @@ class SessionController:
         print(game_id)
 
     def _create_overall_stats(self):
+        data = self.data_view.get()
         stats = {
-            'Games played': self.data_view.get()['game_id'].max(),
-            'States count': self.data_view.get()['state_id'].count(),
-            'Longest game (in states)': self.data_view.get()['state_id'].max(),
-            'Best score': self.data_view.get()['score'].max(),
+            'Games played': str(data['game_id'].max()),
+            'States count': str(data['state_id'].count()),
+            'Longest game (in states)': str(data['state_id'].max()),
+            'Best score': str(data['score'].max()),
         }
         return stats
