@@ -19,7 +19,7 @@ class SessionController:
         self.game_id = None
         initial_game_stats = self._game_stats_dict('Not selected', 'None', 'None')
         self.window = SessionWindow(self._create_overall_stats(), initial_game_stats,
-                                    self._open_overall_charts_window, self._game_id_selected, self._open_game_charts_window, self._open_replay_window)
+                                    lambda x: None, self._open_overall_charts_window, self._game_id_selected, self._open_game_charts_window, self._open_replay_window)
 
     def _open_replay_window(self):
         if self.game_id is not None:
