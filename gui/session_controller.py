@@ -4,6 +4,7 @@ from gui.replay_media_player import ReplayMediaPlayer
 from gui.session_window import SessionWindow
 from gui.utils import show_error
 from session import Session
+from simulator.simulation_job_factory import simulation_job_factory
 from statistics.game_frames_view import GameFramesView
 from statistics.plot_builder import PlotBuilder
 from statistics.statistics_view import StatisticsView
@@ -17,9 +18,14 @@ class SessionController:
         self.data_view = StatisticsView(self.db_conn)
         self.charts_builder = PlotBuilder(self.data_view)
         self.game_id = None
+        self.simulation_job = None
         initial_game_stats = self._game_stats_dict('Not selected', 'None', 'None')
         self.window = SessionWindow(self._create_overall_stats(), initial_game_stats,
-                                    lambda x: None, self._open_overall_charts_window, self._game_id_selected, self._open_game_charts_window, self._open_replay_window)
+                                    self._start_simulation_job,
+                                    self._open_overall_charts_window, self._game_id_selected, self._open_game_charts_window, self._open_replay_window)
+
+    def _start_simulation_job(self):
+        return simulation_job_factory(self.session.db_path, self.session.model_path)
 
     def _open_replay_window(self):
         if self.game_id is not None:
