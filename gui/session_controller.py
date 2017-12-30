@@ -37,8 +37,9 @@ class SessionController:
 
     def _open_overall_charts_window(self):
         ChartsWindow('charts', {
-            'move usage distribution per distance': self.charts_builder.plot_move_usage_distribution_per_distance,
-            'final scores': self.charts_builder.plot_final_scores
+            'Move usage distribution per distance': self.charts_builder.plot_move_usage_distribution_per_distance,
+            'Final scores': self.charts_builder.plot_final_scores,
+            'Render time': self.charts_builder.plot_render_time,
         })
 
     def _game_id_selected(self, game_id):

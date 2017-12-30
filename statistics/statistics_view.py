@@ -11,7 +11,18 @@ _HISTORY_VIEW_COLUMNS = ['game_id',
                          'pred4',
                          'pred5',
                          'pred6']
-_SELECT_HISTORY_QUERY = 'SELECT %s FROM history ORDER BY game_id ASC, state_id ASC' % ','.join(_HISTORY_VIEW_COLUMNS)
+
+_TIMESTAMP_IDX = _HISTORY_VIEW_COLUMNS.index('timestamp')
+_SELECT_HISTORY_QUERY = '''
+    SELECT game_id,
+           state_id,
+           action_idx,
+           score,
+           (julianday(timestamp) - 2440587.5) * 86400.0 AS timestamp,
+           pred1, pred2, pred3, pred4, pred5, pred6
+    FROM history 
+    ORDER BY game_id ASC, state_id ASC'''
+_DB_DATE_FORMAT = '%Y-%m-%d '
 
 
 class StatisticsView:

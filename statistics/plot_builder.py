@@ -14,6 +14,13 @@ class PlotBuilder:
         self._data_view.get_for_game(game_id)['score'].plot(ax=ax)
 
 
+    def plot_render_time(self, ax):
+        self._data_view.get()\
+            .groupby('game_id')\
+            ['timestamp']\
+            .diff()\
+            .plot(ax=ax)
+
     def plot_final_scores(self, ax):
         data = self._data_view.get()\
                 .groupby('game_id')['score']\
