@@ -1,6 +1,6 @@
 import sqlite3
 from multiprocessing import Process
-from time import sleep
+from datetime import datetime
 
 
 def simulation_job_factory(db_path, model_path):
@@ -31,12 +31,17 @@ def _run_game_simulation(db_path, model_path):
 class GameSimulationJob:
     def __init__(self, db_path, model_path):
         self.process = Process(target=_run_game_simulation, args=(db_path, model_path))
+        self._start_time = None
 
     def run(self):
         self.process.start()
+        self._start_time = datetime.now()
 
     def is_running(self):
         return self.process.is_alive()
 
     def stop(self):
         self.process.terminate()
+
+    def start_time(self):
+        return self._start_time
