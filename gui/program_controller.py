@@ -1,5 +1,5 @@
 from gui.session_controller import SessionController
-from gui.session_select_controller import SessionSelectController
+from gui.session_select.session_select_controller import SessionSelectController
 
 
 class ProgramController:

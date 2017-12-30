@@ -1,4 +1,4 @@
-from gui.session_select_window import SessionSelectWindow
+from gui.session_select.session_select_window import SessionSelectWindow
 from gui.utils import show_error
 from session import verify_session_path
 
