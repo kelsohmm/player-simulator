@@ -1,8 +1,9 @@
 import itertools
 import logging
 import time
+
 from config import _MARIO_POSSIBLE_MOVES, FRAMES_STACKED
-from game.state import State
+from simulator.game.state import State
 
 
 class Episode:

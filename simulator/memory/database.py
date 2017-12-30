@@ -1,5 +1,6 @@
 from sqlite3 import Binary
-from memory.db_commands import get_max_game_id, get_db_size
+
+from simulator.memory.db_commands import get_max_game_id, get_db_size
 
 _SELECT_MEMORY_QUERY = '''
     SELECT prev_memories.state,

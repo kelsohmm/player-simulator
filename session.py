@@ -1,6 +1,7 @@
-from memory.database import Database
-from memory.db_commands import commit_db_schema
 import os
+
+from simulator.memory.db_commands import commit_db_schema
+from simulator.memory.database import Database
 
 PREVIEW_FILENAME = 'model_preview.png'
 DB_FILENAME = 'history.db'
@@ -47,11 +48,11 @@ class Session:
         self.model.save(self.model_path)
 
     def _open_existing(self):
-        from agent.model import load_model
+        from simulator.agent.model import load_model
         self.model = load_model(self.model_path)
 
     def _open_new(self):
-        from agent.model import create_network
+        from simulator.agent.model import create_network
         commit_db_schema(self.db_conn)
         self.model = create_network(os.path.join(self.session_path, PREVIEW_FILENAME))
         self.save_model()
