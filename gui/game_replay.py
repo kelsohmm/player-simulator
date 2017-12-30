@@ -14,6 +14,18 @@ class GameReplay:
         self.speed = 1.0
         self.stop()
 
+    def seek(self, time_diff):
+        frames_to_move = int(time_diff / self.SECONDS_PER_FRAME * self.speed)
+
+        self.curr_frame += frames_to_move
+
+        if self.curr_frame >= len(self.frames):
+            self.curr_frame = len(self.frames) - 1
+        elif self.curr_frame < 0:
+            self.curr_frame = 0
+
+        self.last_time = time()
+
     def stop(self):
         self.curr_frame = 0
         self.last_time = None
@@ -34,12 +46,7 @@ class GameReplay:
         new_time = time()
         time_diff = new_time - self.last_time
 
-        frames_to_move = int(time_diff / self.SECONDS_PER_FRAME * self.speed)
-        if frames_to_move > 0:
-            self.curr_frame += frames_to_move
-
-            if self.curr_frame >= len(self.frames):
-                self.curr_frame = 0
-            self.last_time = new_time
+        if time_diff > self.SECONDS_PER_FRAME:
+            self.seek(time_diff)
 
         return self.frames[self.curr_frame]

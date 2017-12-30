@@ -36,3 +36,12 @@ class ReplayMediaPlayer(tk.Toplevel):
 
         self.stop_photo = tk.PhotoImage(file=STOP_ICON).subsample(2)
         tk.Button(self, image=self.stop_photo, command=self.replay.stop).pack(side=tk.LEFT)
+
+        tk.Button(self, text='-5s', width=4, height=1, command=self._replay_backward_5s).pack(side=tk.LEFT)
+        tk.Button(self, text='+5s', width=4, height=1, command=self._replay_forward_5s).pack(side=tk.LEFT)
+
+    def _replay_forward_5s(self):
+        self.replay.seek(5)
+
+    def _replay_backward_5s(self):
+        self.replay.seek(-5)
