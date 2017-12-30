@@ -1,6 +1,7 @@
 import os
 import tkinter as tk
-from gui.game_replay import GameReplay
+
+from gui.widgets.game_replay import GameReplay
 
 PLAY_ICON = os.path.join('gui', 'resources', 'play.png')
 PAUSE_ICON = os.path.join('gui', 'resources', 'pause.png')

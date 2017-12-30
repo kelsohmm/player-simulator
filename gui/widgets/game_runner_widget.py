@@ -1,6 +1,7 @@
 import tkinter as tk
 from datetime import datetime
-from gui.stats_widget import StatsWidget
+
+from gui.widgets.stats_widget import StatsWidget
 
 
 class GameRunnerWidget(tk.Frame):

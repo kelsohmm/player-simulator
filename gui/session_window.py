@@ -1,7 +1,7 @@
 import tkinter as tk
 
-from gui.game_runner_widget import GameRunnerWidget
-from gui.stats_widget import StatsWidget
+from gui.widgets.game_runner_widget import GameRunnerWidget
+from gui.widgets.stats_widget import StatsWidget
 
 
 class SessionWindow(tk.Toplevel):
