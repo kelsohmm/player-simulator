@@ -1,7 +1,9 @@
 import sqlite3
-from gui.charts_window import ChartsWindow
-from gui.replay_media_player import ReplayMediaPlayer
-from gui.session_window import SessionWindow
+
+from gui.session_control.replay_media_player import ReplayMediaPlayer
+from gui.session_control.session_window import SessionWindow
+
+from gui.session_control.charts_window import ChartsWindow
 from gui.utils import show_error
 from session import Session
 from simulator.simulation_job_factory import simulation_job_factory

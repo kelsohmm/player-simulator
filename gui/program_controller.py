@@ -1,4 +1,4 @@
-from gui.session_controller import SessionController
+from gui.session_control.session_controller import SessionController
 from gui.session_select.session_select_controller import SessionSelectController
 
 
