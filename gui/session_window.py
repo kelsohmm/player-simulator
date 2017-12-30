@@ -25,18 +25,24 @@ class SessionWindow(tk.Toplevel):
         self._root().destroy()
 
     def init_sessions_overview(self, stats):
-        overview_subframe = tk.Frame(self, relief=tk.RAISED, padx=3, pady=3)
+        overview_subframe = tk.Frame(self, relief=tk.RAISED, padx=5, pady=3)
 
-        stats_widget = StatsWidget(overview_subframe, stats)
-        stats_widget.pack(fill=tk.X)
+        tk.Label(overview_subframe, text='Session overview', font=25, pady=5)\
+            .pack(fill=tk.X)
 
-        statistics_button = tk.Button(overview_subframe, text="Show overall charts", command=self.overall_stats_callback)
-        statistics_button.pack(fill=tk.X)
+        StatsWidget(overview_subframe, stats)\
+            .pack(fill=tk.X)
+
+        tk.Button(overview_subframe, text="Show overall charts", command=self.overall_stats_callback)\
+            .pack(fill=tk.X)
 
         overview_subframe.pack(side=tk.LEFT)
 
     def init_session_details(self, stats):
-        detail_subframe = tk.Frame(self, relief=tk.RAISED, padx=3)
+        detail_subframe = tk.Frame(self, relief=tk.RAISED, padx=5, pady=3)
+
+        tk.Label(detail_subframe, text='Games history', font=25, pady=5)\
+            .pack(fill=tk.X)
 
         select_subframe = tk.Frame(detail_subframe)
         game_id_entry = tk.Entry(select_subframe, text="0", width=10)
@@ -50,10 +56,10 @@ class SessionWindow(tk.Toplevel):
         self.game_stats_widget = StatsWidget(detail_subframe, stats)
         self.game_stats_widget.pack(fill=tk.X)
 
-        statistics_button = tk.Button(detail_subframe, text="Show game charts", command=self.game_stats_callback)
-        statistics_button.pack(fill=tk.X)
+        tk.Button(detail_subframe, text="Show game charts", command=self.game_stats_callback)\
+            .pack(fill=tk.X)
 
-        replay_button = tk.Button(detail_subframe, text="Show game replay", command=self.replay_callback)
-        replay_button.pack(fill=tk.X)
+        tk.Button(detail_subframe, text="Show game replay", command=self.replay_callback)\
+            .pack(fill=tk.X)
 
         detail_subframe.pack(side=tk.LEFT)
