@@ -3,6 +3,7 @@ import tkinter as tk
 
 class GameRunnerWidget(tk.Frame):
     SIMULATION_CHECK_CLOCK_MS = 1000
+
     def __init__(self, master, game_run_factory):
         super().__init__(master)
         self.game_run_factory = game_run_factory
@@ -27,6 +28,9 @@ class GameRunnerWidget(tk.Frame):
             if games_left > 0:
                 self._disable_entry()
                 self._start_new_simulation_job()
+        else:
+            self._enable_entry()
+            self._stop_simulation_job()
 
 
     def _start_new_simulation_job(self):
@@ -38,15 +42,16 @@ class GameRunnerWidget(tk.Frame):
         self.after(self.SIMULATION_CHECK_CLOCK_MS, self._watch_simulation_job)
 
     def _watch_simulation_job(self):
-        if not self.simulation_job.is_running():
-            games_left = self.games_left_var.get()
-            if games_left > 0:
-                self.games_left_var.set(games_left - 1)
-                self._start_new_simulation_job()
+        if self.simulation_job is not None:
+            if not self.simulation_job.is_running():
+                games_left = self.games_left_var.get()
+                if games_left > 0:
+                    self.games_left_var.set(games_left - 1)
+                    self._start_new_simulation_job()
+                else:
+                    self._enable_entry()
             else:
-                self._enable_entry()
-        else:
-            self.after(self.SIMULATION_CHECK_CLOCK_MS, self._watch_simulation_job)
+                self.after(self.SIMULATION_CHECK_CLOCK_MS, self._watch_simulation_job)
 
     def _enable_entry(self):
         self.games_left_entry.config(state=tk.NORMAL)
@@ -55,3 +60,7 @@ class GameRunnerWidget(tk.Frame):
     def _disable_entry(self):
         self.games_left_entry.config(state=tk.DISABLED)
         self.button_text_var.set('Stop')
+
+    def _stop_simulation_job(self):
+        self.simulation_job.stop()
+        self.simulation_job = None
