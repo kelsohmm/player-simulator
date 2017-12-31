@@ -7,7 +7,8 @@ class SessionCreateWindow(tk.Toplevel):
 
     def __init__(self, initial_conv_config, initial_dense_config):
         super().__init__(padx=3, pady=5)
-        self.path_var = tk.StringVar()
+        self.title('Create new session')
+
         self.initial_conv_config = initial_conv_config
         self.initial_dense_config = initial_dense_config
         self.conv_frames = []
@@ -27,11 +28,22 @@ class SessionCreateWindow(tk.Toplevel):
         self._add_new_dense()
 
     def _add_new_conv(self):
-        layer_frame = LayerFrame(self.conv_container, lambda: print("del"), {}, '#FFC107', 'conv')
+        layer_frame = LayerFrame(self.conv_container, self._remove_conv, {}, '#FFC107', 'conv')
         self.conv_frames.append(layer_frame)
         layer_frame.pack(fill=tk.X)
 
     def _add_new_dense(self):
-        layer_frame = LayerFrame(self.dense_container, lambda: print("del"), {}, '#3F51B5', 'dense')
+        layer_frame = LayerFrame(self.dense_container, self._remove_dense, {}, '#3F51B5', 'dense')
         self.dense_frames.append(layer_frame)
         layer_frame.pack(fill=tk.X)
+
+    def _remove_conv(self, layer_frame):
+        if layer_frame in self.conv_frames and len(self.conv_frames) > 1:
+            self.conv_frames.remove(layer_frame)
+            layer_frame.destroy()
+
+
+    def _remove_dense(self, layer_frame):
+        if layer_frame in self.dense_frames and len(self.dense_frames) > 1:
+            self.dense_frames.remove(layer_frame)
+            layer_frame.destroy()
