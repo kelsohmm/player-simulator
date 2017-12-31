@@ -9,7 +9,7 @@ class ConfigWidget(tk.Frame):
         for idx, key in enumerate(self.stat_vars.keys()):
             label_row, label_col, entry_row, entry_col = self._get_grid(is_horizontal, idx)
             tk.Label(self, text=str(key)).grid(row=label_row, column=label_col)
-            tk.Entry(self, textvariable=self.stat_vars[key], width=5).grid(row=entry_row, column=entry_col)
+            tk.Entry(self, textvariable=self.stat_vars[key], width=6).grid(row=entry_row, column=entry_col)
 
     def update_stats(self, new_stats):
         for var_name in self.stat_vars.keys():

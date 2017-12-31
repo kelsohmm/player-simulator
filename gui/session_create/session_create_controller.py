@@ -7,6 +7,7 @@ _CONVOLUTION_INITIAL_CONFIG = {
 }
 _DENSE_INITIAL_CONFIG = {
     'Units': 256,
+    'Activation': 'relu'
 }
 
 class SessionCreateController:
