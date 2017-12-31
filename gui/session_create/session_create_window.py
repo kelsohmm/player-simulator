@@ -28,12 +28,12 @@ class SessionCreateWindow(tk.Toplevel):
         self._add_new_dense()
 
     def _add_new_conv(self):
-        layer_frame = LayerFrame(self.conv_container, self._remove_conv, {}, '#FFC107', 'conv')
+        layer_frame = LayerFrame(self.conv_container, self._remove_conv, self.initial_conv_config, '#FFC107', 'conv')
         self.conv_frames.append(layer_frame)
         layer_frame.pack(fill=tk.X)
 
     def _add_new_dense(self):
-        layer_frame = LayerFrame(self.dense_container, self._remove_dense, {}, '#3F51B5', 'dense')
+        layer_frame = LayerFrame(self.dense_container, self._remove_dense, self.initial_dense_config, '#3F51B5', 'dense')
         self.dense_frames.append(layer_frame)
         layer_frame.pack(fill=tk.X)
 
