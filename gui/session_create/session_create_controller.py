@@ -1,4 +1,5 @@
-from config_builder import SESSION_CONFIG_VALIDATIORS, build_validated
+from config_builder import SESSION_CONFIG_VALIDATIORS, build_validated, CONV_LAYERS_CONFIG_VALIDATORS, \
+    DENSE_LAYERS_CONFIG_VALIDATORS
 from gui.session_create.session_create_window import SessionCreateWindow
 from gui.utils import show_error
 
@@ -34,11 +35,16 @@ class SessionCreateController:
         self.window = SessionCreateWindow(_CONVOLUTION_INITIAL_CONFIG, _DENSE_INITIAL_CONFIG, _SESSION_INITIAL_CONFIG, self.create_session)
 
     def create_session(self, layers_config, session_config):
+        conv_configs, dense_configs = layers_config
         session_config = self._remap_config_names(session_config, _SESSION_CONFIG_FIELD_NAME_MAPPING)
 
         try:
             session_config = build_validated(session_config, SESSION_CONFIG_VALIDATIORS)
+            conv_configs = [build_validated(conv_config, CONV_LAYERS_CONFIG_VALIDATORS) for conv_config in conv_configs]
+            dense_configs = [build_validated(dense_config, DENSE_LAYERS_CONFIG_VALIDATORS) for dense_config in dense_configs]
             print(session_config)
+            print(conv_configs)
+            print(dense_configs)
         except ValueError as e:
             show_error(str(e))
 

@@ -8,6 +8,23 @@ SESSION_CONFIG_VALIDATIORS = {
     'lr_decay': lambda val: validate_float_range(0.0, 1.0, val),
 }
 
+DENSE_LAYERS_CONFIG_VALIDATORS = {
+    'Units': lambda val: validate_int_range(1, 5000, val),
+    'Activation': lambda str: validate_string_in_set(['relu', 'sigmoid', 'linear'], str)
+}
+
+CONV_LAYERS_CONFIG_VALIDATORS = {
+    'Filters': lambda val: validate_int_range(1, 128, val),
+    'Kernel size': lambda val: validate_int_range(1, 128, val),
+    'Strides': lambda val: validate_int_range(1, 128, val),
+}
+
+def validate_string_in_set(strings, value):
+    value = str(value)
+    if value not in strings:
+        raise ValueError('Value must be on of: {}'.format(', '.join(strings)))
+    return value
+
 def validate_float_range(min, max, value):
     value = float(value)
     if not (min <= value <= max):
