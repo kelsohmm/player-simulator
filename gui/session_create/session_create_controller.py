@@ -2,6 +2,7 @@ from config_builder import SESSION_CONFIG_VALIDATIORS, build_validated, CONV_LAY
     DENSE_LAYERS_CONFIG_VALIDATORS
 from gui.session_create.session_create_window import SessionCreateWindow
 from gui.utils import show_error
+from simulator.agent.model import build_network_from_layers_config
 
 _CONVOLUTION_INITIAL_CONFIG = {
     'Filters': 64,
@@ -42,10 +43,11 @@ class SessionCreateController:
             session_config = build_validated(session_config, SESSION_CONFIG_VALIDATIORS)
             conv_configs = [build_validated(conv_config, CONV_LAYERS_CONFIG_VALIDATORS) for conv_config in conv_configs]
             dense_configs = [build_validated(dense_config, DENSE_LAYERS_CONFIG_VALIDATORS) for dense_config in dense_configs]
-            print(session_config)
-            print(conv_configs)
-            print(dense_configs)
-        except ValueError as e:
+
+            model = build_network_from_layers_config(session_config, conv_configs, dense_configs)
+
+            print(model)
+        except _ as e:
             show_error(str(e))
 
     def _remap_config_names(self, config, mapping):
@@ -53,4 +55,3 @@ class SessionCreateController:
             mapping[original_name]: config[original_name]
             for original_name in config.keys()
         }
-

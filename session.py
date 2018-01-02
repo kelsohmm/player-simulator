@@ -1,11 +1,7 @@
 import os
-
+from config import MODEL_FILENAME, DB_FILENAME, PREVIEW_FILENAME
 from simulator.memory.db_commands import commit_db_schema
 from simulator.memory.database import Database
-
-PREVIEW_FILENAME = 'model_preview.png'
-DB_FILENAME = 'history.db'
-MODEL_FILENAME = 'model.h5'
 
 
 def verify_session_path(session_path):

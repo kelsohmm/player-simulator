@@ -1,4 +1,7 @@
 import os
+PREVIEW_FILENAME = 'model_preview.png'
+DB_FILENAME = 'history.db'
+MODEL_FILENAME = 'model.h5'
 
 ### RUN SETTINGS ###
 NO_GAMES = 100
