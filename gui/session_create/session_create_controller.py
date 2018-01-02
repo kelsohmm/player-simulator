@@ -2,6 +2,7 @@ from config_builder import SESSION_CONFIG_VALIDATIORS, build_validated, CONV_LAY
     DENSE_LAYERS_CONFIG_VALIDATORS
 from gui.session_create.session_create_window import SessionCreateWindow
 from gui.utils import show_error
+from session import init_session
 from simulator.agent.model import build_network_from_layers_config
 
 _CONVOLUTION_INITIAL_CONFIG = {
@@ -44,9 +45,7 @@ class SessionCreateController:
             conv_configs = [build_validated(conv_config, CONV_LAYERS_CONFIG_VALIDATORS) for conv_config in conv_configs]
             dense_configs = [build_validated(dense_config, DENSE_LAYERS_CONFIG_VALIDATORS) for dense_config in dense_configs]
 
-            model = build_network_from_layers_config(session_config, conv_configs, dense_configs)
-
-            print(model)
+            init_session(self.session_path, session_config, conv_configs, dense_configs)
         except _ as e:
             show_error(str(e))
 

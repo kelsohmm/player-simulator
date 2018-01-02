@@ -1,7 +1,19 @@
 import os
+import sqlite3
 from config import MODEL_FILENAME, DB_FILENAME, PREVIEW_FILENAME
-from simulator.memory.db_commands import commit_db_schema
 from simulator.memory.database import Database
+
+
+def init_session(session_path, session_config, conv_configs, dense_configs):
+    from simulator.agent.model import build_network_from_layers_config, plot_model
+    from simulator.memory.db_commands import commit_db_schema
+
+    model = build_network_from_layers_config(session_config, conv_configs, dense_configs)
+    plot_model(os.path.join(session_path, PREVIEW_FILENAME), model)
+    model.save(os.path.join(session_path, MODEL_FILENAME))
+
+    with sqlite3.connect(os.path.join(session_path, DB_FILENAME)) as db_conn:
+        commit_db_schema(db_conn)
 
 
 def verify_session_path(session_path):
@@ -20,13 +32,10 @@ class Session:
         self.db_path = os.path.join(self.session_path, DB_FILENAME)
 
     def __enter__(self):
-        import sqlite3
-        self.db_conn = sqlite3.connect(self.db_path)
-        if len(os.listdir(self.session_path)) > 0:
-            self._open_existing()
-        else:
-            self._open_new()
+        from simulator.agent.model import load_model
 
+        self.db_conn = sqlite3.connect(self.db_path)
+        self.model = load_model(self.model_path)
         self.db = Database(self.db_conn)
 
         return self
@@ -42,14 +51,4 @@ class Session:
 
     def save_model(self):
         self.model.save(self.model_path)
-
-    def _open_existing(self):
-        from simulator.agent.model import load_model
-        self.model = load_model(self.model_path)
-
-    def _open_new(self):
-        from simulator.agent.model import create_network
-        commit_db_schema(self.db_conn)
-        self.model = create_network(os.path.join(self.session_path, PREVIEW_FILENAME))
-        self.save_model()
 
