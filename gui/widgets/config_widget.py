@@ -11,6 +11,12 @@ class ConfigWidget(tk.Frame):
             tk.Label(self, text=str(key)).grid(row=label_row, column=label_col)
             tk.Entry(self, textvariable=self.stat_vars[key], width=6).grid(row=entry_row, column=entry_col)
 
+    def get_config(self):
+        return {
+            stat_name: self.stat_vars[stat_name].get()
+            for stat_name in self.stat_vars.keys()
+        }
+
     def update_stats(self, new_stats):
         for var_name in self.stat_vars.keys():
             if var_name in new_stats:

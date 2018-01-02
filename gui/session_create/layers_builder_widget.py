@@ -29,6 +29,10 @@ class LayersBuilderWidget(tk.Frame):
         self._add_new_conv()
         self._add_new_dense()
 
+    def get_layers_config(self):
+        return ([frame.config.get_config() for frame in self.conv_frames],
+                [frame.config.get_config() for frame in self.dense_frames])
+
     def _add_new_conv(self):
         layer_frame = LayerFrame(self.conv_container, self._remove_conv, self.initial_conv_config, '#FFC107', 'conv')
         self.conv_frames.append(layer_frame)

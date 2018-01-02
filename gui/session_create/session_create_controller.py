@@ -21,5 +21,9 @@ class SessionCreateController:
     def __init__(self, session_path, session_created_callback):
         self.session_path = session_path
         self.session_created_callback = session_created_callback
-        self.window = SessionCreateWindow(_CONVOLUTION_INITIAL_CONFIG, _DENSE_INITIAL_CONFIG, _SESSION_INITIAL_CONFIG)
+        self.window = SessionCreateWindow(_CONVOLUTION_INITIAL_CONFIG, _DENSE_INITIAL_CONFIG, _SESSION_INITIAL_CONFIG, self.create_session)
+
+    def create_session(self, layers_config, session_config):
+        print(layers_config)
+        print(session_config)
 
