@@ -36,6 +36,9 @@ class SessionCreateController:
         self.session_created_callback = session_created_callback
         self.window = SessionCreateWindow(_CONVOLUTION_INITIAL_CONFIG, _DENSE_INITIAL_CONFIG, _SESSION_INITIAL_CONFIG, self.create_session)
 
+    def finish(self):
+        self.window.destroy()
+
     def create_session(self, layers_config, session_config):
         conv_configs, dense_configs = layers_config
         session_config = self._remap_config_names(session_config, _SESSION_CONFIG_FIELD_NAME_MAPPING)
@@ -46,6 +49,8 @@ class SessionCreateController:
             dense_configs = [build_validated(dense_config, DENSE_LAYERS_CONFIG_VALIDATORS) for dense_config in dense_configs]
 
             init_session(self.session_path, session_config, conv_configs, dense_configs)
+            self.finish()
+            self.session_created_callback()
         except _ as e:
             show_error(str(e))
 

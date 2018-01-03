@@ -7,10 +7,14 @@ class SessionSelectController:
         self.callback = session_selected_callback
         self.window = SessionSelectWindow(self._session_selected)
 
+    def finish(self):
+        self.window.destroy()
+
     def _session_selected(self, path):
         if verify_session_path(path):
             self.window.quit()
             self.window = None
             self.callback(path)
+            self.finish()
         else:
             show_error("Select empty directory to create a new session, or reopen existing session directory.")

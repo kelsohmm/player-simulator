@@ -12,7 +12,7 @@ def _select_dir_popup():
     return filedialog.askdirectory()
 
 
-class SessionSelectWindow(tk.Frame):
+class SessionSelectWindow(tk.Toplevel):
 
     def __init__(self, callback):
         super().__init__(padx=3)
@@ -22,8 +22,7 @@ class SessionSelectWindow(tk.Frame):
 
 
     def initUI(self):
-
-        self.master.title("Player Simulator - select session")
+        self.title("Player Simulator - select session")
 
         window_text = tk.Label(self, text=_SELECT_WINDOW_TEXT)
         window_text.pack()

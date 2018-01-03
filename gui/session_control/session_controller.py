@@ -26,6 +26,9 @@ class SessionController:
                                     self._start_simulation_job,
                                     self._open_overall_charts_window, self._game_id_selected, self._open_game_charts_window, self._open_replay_window)
 
+    def finish(self):
+        self.window.destroy()
+
     def _start_simulation_job(self):
         return simulation_job_factory(self.session.db_path, self.session.model_path)
 

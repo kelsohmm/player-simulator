@@ -15,7 +15,11 @@ class ProgramController:
     def session_path_selected(self, session_path):
         self.session_path = session_path
         if len(os.listdir(session_path)) == 0:
-            self._active_controller = SessionCreateController(session_path, session_created_callback=self.session_path_selected)
+            self._active_controller = SessionCreateController(session_path, session_created_callback=self.new_session_created)
         else:
             self._active_controller = SessionController(session_path)
+
+    def new_session_created(self):
+        self._active_controller = SessionController(self.session_path)
+
 
