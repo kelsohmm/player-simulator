@@ -38,6 +38,7 @@ class SessionCreateController:
 
     def finish(self):
         self.window.destroy()
+        self.window = None
 
     def create_session(self, layers_config, session_config):
         conv_configs, dense_configs = layers_config

@@ -28,6 +28,7 @@ class SessionController:
 
     def finish(self):
         self.window.destroy()
+        self.window = None
 
     def _start_simulation_job(self):
         return simulation_job_factory(self.session.db_path, self.session.model_path)

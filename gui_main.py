@@ -12,7 +12,7 @@ def main():
 
     root = tk.Tk()
     root.withdraw()
-    app = ProgramController(r"C:\Users\Bogusz\inzynierka\player-simulator\saved_sessions\empty")
+    app = ProgramController()
     root.mainloop()
 
 

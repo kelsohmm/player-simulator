@@ -37,8 +37,6 @@ class SessionSelectWindow(tk.Toplevel):
 
         dir_open_subframe.pack(fill=tk.BOTH, expand=True)
 
-        self.pack(fill=tk.BOTH, expand=True)
-
         ok_button = tk.Button(self, text="Open session", command=self._create_session)
         ok_button.pack(side=tk.RIGHT, fill=tk.X)
 
@@ -47,6 +45,3 @@ class SessionSelectWindow(tk.Toplevel):
 
     def _create_session(self):
         self.callback(self.path_var.get())
-
-    def quit(self):
-        self._root().destroy()

@@ -9,11 +9,10 @@ class SessionSelectController:
 
     def finish(self):
         self.window.destroy()
+        self.window = None
 
     def _session_selected(self, path):
         if verify_session_path(path):
-            self.window.quit()
-            self.window = None
             self.callback(path)
             self.finish()
         else:

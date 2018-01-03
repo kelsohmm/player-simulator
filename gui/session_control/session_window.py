@@ -26,9 +26,6 @@ class SessionWindow(tk.Toplevel):
     def set_game_details(self, game_stats):
         self.game_stats_widget.update_stats(game_stats)
 
-    def quit(self):
-        self._root().destroy()
-
     def init_simulation_runner(self, simulation_factory):
         runner_subframe = tk.Frame(self, relief=tk.RAISED, padx=5, pady=3)
 
