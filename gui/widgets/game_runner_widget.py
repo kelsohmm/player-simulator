@@ -1,6 +1,7 @@
 import tkinter as tk
 from datetime import datetime
 
+from gui.widgets.config_widget import ConfigWidget
 from gui.widgets.stats_widget import StatsWidget
 
 
@@ -17,6 +18,14 @@ class GameRunnerWidget(tk.Frame):
 
         self.games_left_var = tk.IntVar(value=1)
         self.button_text_var = tk.StringVar(value='Run')
+
+        config_defaults = {
+            'Discount factor': 0.99,
+            'Batch size': 30,
+            'Exploration factor': 0.05,
+        }
+        self.config = ConfigWidget(self, config_defaults)\
+            .pack(fill=tk.X)
 
         entry_frame = tk.Frame(self)
 
