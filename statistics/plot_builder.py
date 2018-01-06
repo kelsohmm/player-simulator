@@ -1,4 +1,5 @@
 from math import floor
+import pandas as pd
 
 
 def _groupby_chunk(chunks):
@@ -13,12 +14,9 @@ class PlotBuilder:
     def plot_game_score(self, game_id, ax):
         self._data_view.get_for_game(game_id)['score'].plot(ax=ax)
 
-
     def plot_render_time(self, ax):
-        self._data_view.get()\
-            .groupby('game_id')\
-            ['timestamp']\
-            .diff()\
+        time_diffs = self._data_view.get().groupby('game_id')['timestamp'].diff()
+        time_diffs.clip(0.0, time_diffs.std()) \
             .plot(ax=ax)
 
     def plot_final_scores(self, ax):
