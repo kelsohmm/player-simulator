@@ -1,8 +1,8 @@
-import tensorflow as tf
-import keras as K
-
 
 def loss_mse_for_known(y_true, y_pred):
+    import tensorflow as tf
+    import keras as K
+
     nan_difference = y_pred - y_true
     difference = tf.where(tf.is_nan(nan_difference), tf.zeros_like(y_pred), nan_difference)
     sum = K.backend.sum(difference, axis=1)
@@ -11,6 +11,8 @@ def loss_mse_for_known(y_true, y_pred):
     return res
 
 def build_network_from_layers_config(session_config, conv_configs, dense_configs):
+    import keras as K
+
     conv_shape = (session_config['frame_width'],) + (session_config['frame_height'],) + (session_config['frames_stacked'],)
     frame_input = K.Input(shape=conv_shape, name='frame_input')
 
@@ -40,6 +42,7 @@ def build_network_from_layers_config(session_config, conv_configs, dense_configs
 
 
 def plot_model(preview_path, model):
+    import keras as K
     try:
         K.utils.plot_model(model, show_shapes=True, to_file=preview_path)
     except:
@@ -71,4 +74,5 @@ def create_network(preview_path):
     return model
 
 def load_model(model_path):
+    import keras as K
     return K.models.load_model(model_path, custom_objects={'loss_mse_for_known': loss_mse_for_known})
