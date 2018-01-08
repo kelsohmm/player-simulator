@@ -42,14 +42,14 @@ class SessionController:
     def _open_game_charts_window(self):
         if self.game_id is not None:
             ChartsWindow('charts', {
-                'move usage distribution per distance': lambda ax: self.charts_builder.plot_game_score(self.game_id, ax),
+                'Game score': lambda ax: self.charts_builder.plot_game_score(self.game_id, ax),
             })
         else:
             show_error('Game not selected.')
 
     def _open_overall_charts_window(self):
         ChartsWindow('charts', {
-            'Move usage distribution per distance': self.charts_builder.plot_move_usage_distribution_per_distance,
+            'Action value predictions': self.charts_builder.plot_action_value_predictions,
             'Final scores': self.charts_builder.plot_final_scores,
             'Render time': self.charts_builder.plot_render_time,
         })

@@ -1,10 +1,3 @@
-from math import floor
-import pandas as pd
-
-
-def _groupby_chunk(chunks):
-    return lambda index: floor(index / chunks)
-
 
 class PlotBuilder:
     def __init__(self, data_view, epoch_size=500):
@@ -25,10 +18,8 @@ class PlotBuilder:
                 .last()
         data.plot(ax=ax)
 
-    def plot_move_usage_distribution_per_distance(self, ax):
-        data = self._data_view.get() \
-            .round({'score': 0})\
-            .groupby(['score'])['action_idx']\
-            .count()
-        data.plot.area(ax=ax)
+    def plot_action_value_predictions(self, ax):
+        self._data_view.get()\
+            [['pred1', 'pred2', 'pred3', 'pred4', 'pred5', 'pred6']] \
+            .plot(ax=ax)
 
