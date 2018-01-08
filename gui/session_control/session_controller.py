@@ -43,7 +43,8 @@ class SessionController:
         if self.game_id is not None:
             ChartsWindow('charts', {
                 'Score over time': lambda ax: self.charts_builder.plot_game_score(self.game_id, ax),
-                'Action indexes chosen': lambda ax: self.charts_builder.plot_action_idxs(self.game_id, ax),
+                'Action indexes chosen': lambda ax: self.charts_builder.plot_game_action_idxs(self.game_id, ax),
+                'Action value predictions': lambda ax: self.charts_builder.plot_game_action_value_predictions(self.game_id, ax),
             })
         else:
             show_error('Game not selected.')
