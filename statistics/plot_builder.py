@@ -1,4 +1,5 @@
 import numpy as np
+import pandas as pd
 
 
 class PlotBuilder:
@@ -6,8 +7,10 @@ class PlotBuilder:
         self._epoch_size = epoch_size
         self._data_view = data_view
 
-    def plot_game_score(self, game_id, ax):
-        self._data_view.get_for_game(game_id)['score'].plot(ax=ax)
+    def plot_action_idxs(self, game_id, ax):
+        data = self._data_view.get_for_game(game_id)
+        data['state_id'] = pd.to_numeric(data['state_id'], errors='coerce')
+        data.plot.scatter(x='score', y='state_id', c='action_idx', ax=ax)
 
     def plot_render_time(self, ax):
         time_diffs = self._data_view.get().groupby('game_id')['timestamp'].diff()
