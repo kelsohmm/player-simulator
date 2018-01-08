@@ -42,6 +42,7 @@ class SessionController:
     def _open_game_charts_window(self):
         if self.game_id is not None:
             ChartsWindow('charts', {
+                'Score over time': lambda ax: self.charts_builder.plot_game_score(self.game_id, ax),
                 'Action indexes chosen': lambda ax: self.charts_builder.plot_action_idxs(self.game_id, ax),
             })
         else:

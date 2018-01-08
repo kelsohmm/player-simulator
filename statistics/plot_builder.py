@@ -10,7 +10,11 @@ class PlotBuilder:
     def plot_action_idxs(self, game_id, ax):
         data = self._data_view.get_for_game(game_id)
         data['state_id'] = pd.to_numeric(data['state_id'], errors='coerce')
-        data.plot.scatter(x='score', y='state_id', c='action_idx', ax=ax)
+        data.plot.scatter(x='score', y='state_id', c='action_idx', ax=ax, edgecolors='k')
+
+    def plot_game_score(self, game_id, ax):
+        self._data_view.get_for_game(game_id)\
+            .plot(x='state_id', y='score', ax=ax, )
 
     def plot_render_time(self, ax):
         time_diffs = self._data_view.get().groupby('game_id')['timestamp'].diff()
