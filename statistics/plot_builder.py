@@ -1,3 +1,5 @@
+import numpy as np
+
 
 class PlotBuilder:
     def __init__(self, data_view, epoch_size=500):
@@ -21,5 +23,13 @@ class PlotBuilder:
     def plot_action_value_predictions(self, ax):
         self._data_view.get()\
             [['pred1', 'pred2', 'pred3', 'pred4', 'pred5', 'pred6']] \
+            .plot(ax=ax)
+
+    def plot_reward_rolling_sum(self, ax):
+        self._data_view.get()\
+            ['score']\
+            .diff()\
+            .apply(np.sign)\
+            .rolling(window=10000, center=True).sum()\
             .plot(ax=ax)
 

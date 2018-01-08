@@ -52,6 +52,7 @@ class SessionController:
             'Action value predictions': self.charts_builder.plot_action_value_predictions,
             'Final scores': self.charts_builder.plot_final_scores,
             'Render time': self.charts_builder.plot_render_time,
+            'Reward rolling sum': self.charts_builder.plot_reward_rolling_sum,
         })
 
     def _game_id_selected(self, game_id):
