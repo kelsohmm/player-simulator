@@ -5,7 +5,7 @@ from gui.widgets.config_widget import ConfigWidget
 
 class LayerFrame(tk.Frame):
     def __init__(self, master, remove_callback, initial_config, color, name):
-        super(LayerFrame, self).__init__(master, pady=3, padx=3)
+        tk.Frame.__init__(self, master, pady=3, padx=3)
 
         self.remove_callback = remove_callback
 

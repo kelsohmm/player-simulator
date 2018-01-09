@@ -12,7 +12,7 @@ class GameRunnerWidget(tk.Frame):
     INACTIVE_STATS = {'Start time': '---', 'Duration': '---'}
 
     def __init__(self, master, game_run_factory):
-        super().__init__(master)
+        tk.Frame.__init__(self, master)
         self.game_run_factory = game_run_factory
         self.simulation_job = None
 

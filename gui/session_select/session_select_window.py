@@ -15,7 +15,7 @@ def _select_dir_popup():
 class SessionSelectWindow(tk.Toplevel):
 
     def __init__(self, callback):
-        super().__init__(padx=3)
+        tk.Toplevel.__init__(self, padx=3)
         self.path_var = tk.StringVar()
         self.callback = callback
         self.initUI()

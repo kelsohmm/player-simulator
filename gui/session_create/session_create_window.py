@@ -7,7 +7,7 @@ from gui.widgets.config_widget import ConfigWidget
 class SessionCreateWindow(tk.Toplevel):
 
     def __init__(self, initial_conv_config, initial_dense_config, initial_session_config, create_session_callback):
-        super().__init__(padx=3, pady=5)
+        tk.Toplevel.__init__(self, padx=3, pady=5)
         self.title('Create new session')
         self.create_session_callback = create_session_callback
 

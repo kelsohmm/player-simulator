@@ -13,7 +13,7 @@ class ReplayMediaPlayer(tk.Toplevel):
     HEIGHT = 256
 
     def __init__(self, game_frames):
-        super().__init__()
+        tk.Toplevel.__init__(self)
         self.resizable(width=False, height=False)
         self.replay = GameReplay(game_frames, self.WIDTH, self.HEIGHT)
         self.replay.play()

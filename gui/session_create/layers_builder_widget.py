@@ -6,7 +6,7 @@ from gui.session_create.layer_frame import LayerFrame
 class LayersBuilderWidget(tk.Frame):
 
     def __init__(self, master, initial_conv_config, initial_dense_config):
-        super().__init__(master, padx=3, pady=5)
+        tk.Frame.__init__(self, master, padx=3, pady=5)
 
         tk.Label(self, text='Configure neural network layers', font=25, pady=5) \
             .pack(fill=tk.X)

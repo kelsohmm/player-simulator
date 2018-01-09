@@ -9,7 +9,7 @@ class SessionWindow(tk.Toplevel):
                  simulation_factory,
                  overall_stats_callback, select_game_callback,
                  game_stats_callback, replay_callback):
-        super().__init__(padx=3)
+        tk.Toplevel.__init__(self, padx=3)
         self.overall_stats_callback = overall_stats_callback
         self.select_game_callback = select_game_callback
         self.game_stats_callback = game_stats_callback

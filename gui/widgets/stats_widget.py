@@ -3,7 +3,7 @@ import tkinter as tk
 
 class StatsWidget(tk.Frame):
     def __init__(self, master, stats):
-        super().__init__(master, padx=3)
+        tk.Frame.__init__(self, master, padx=3)
         self.stat_vars = self._create_stat_vars(stats)
 
         for idx, key in enumerate(self.stat_vars.keys()):
