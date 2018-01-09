@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 class ChartsWindow:
     def __init__(self, window_name, chart_builders, nrows=2, ncols=2):
         fig, axes = plt.subplots(nrows=nrows, ncols=ncols, num=window_name)
+        fig.tight_layout(h_pad=3, w_pad=2)
 
         col = 0
         row = 0
