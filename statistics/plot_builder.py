@@ -14,7 +14,7 @@ class PlotBuilder:
 
     def plot_game_score(self, game_id, ax):
         self._data_view.get_for_game(game_id)\
-            .plot(x='state_id', y='score', ax=ax, )
+            .plot(x='state_id', y='score', ax=ax)
 
     def plot_game_action_value_predictions(self, game_id, ax):
         self._data_view.get_for_game(game_id) \
@@ -24,17 +24,24 @@ class PlotBuilder:
         time_diffs = self._data_view.get().groupby('game_id')['timestamp'].diff()
         time_diffs.clip(0.0, time_diffs.std()) \
             .plot(ax=ax)
+        ax.set_xlabel('memory')
+        ax.set_ylabel('render time [s]')
 
     def plot_final_scores(self, ax):
         data = self._data_view.get()\
                 .groupby('game_id')['score']\
                 .last()
         data.plot(ax=ax)
+        ax.set_xlabel('game')
+        ax.set_ylabel('final score')
 
     def plot_action_value_predictions(self, ax):
         self._data_view.get()\
             [['pred1', 'pred2', 'pred3', 'pred4', 'pred5', 'pred6']] \
+            .rename(index=str, columns={"pred1": "idle", "pred2": "left", "pred3": "left+jump", "pred4": "right", "pred5": "right+jump", "pred6": "jump"})\
             .plot(ax=ax)
+        ax.set_xlabel('memory')
+        ax.set_ylabel('Q value')
 
     def plot_reward_rolling_sum(self, ax):
         self._data_view.get()\
@@ -43,4 +50,6 @@ class PlotBuilder:
             .apply(np.sign)\
             .rolling(window=10000, center=True).sum()\
             .plot(ax=ax)
+        ax.set_xlabel('memory')
+        ax.set_ylabel('rewards sum')
 
