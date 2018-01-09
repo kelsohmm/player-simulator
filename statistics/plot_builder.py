@@ -15,10 +15,25 @@ class PlotBuilder:
     def plot_game_score(self, game_id, ax):
         self._data_view.get_for_game(game_id)\
             .plot(x='state_id', y='score', ax=ax)
+        ax.set_xlabel('state_id')
+        ax.set_ylabel('score')
 
     def plot_game_action_value_predictions(self, game_id, ax):
         self._data_view.get_for_game(game_id) \
-            .plot(x='state_id', y=['pred1', 'pred2', 'pred3', 'pred4', 'pred5', 'pred6'], ax=ax)
+            .rename(index=str, columns={"pred1": "idle", "pred2": "left", "pred3": "left+jump", "pred4": "right", "pred5": "right+jump", "pred6": "jump"}) \
+            .plot(x='state_id', y=['idle', 'left', 'left+jump', 'right', 'right+jump', 'jump'], ax=ax)
+        ax.set_xlabel('state_id')
+        ax.set_ylabel('Q values')
+
+    def plot_game_reward_rolling_sum(self, game_id, ax):
+        self._data_view.get_for_game(game_id)\
+            ['score'] \
+            .diff() \
+            .apply(np.sign) \
+            .rolling(window=20, center=True).sum() \
+            .plot(x='state_id', ax=ax)
+        ax.set_xlabel('state_id')
+        ax.set_ylabel('rewards sum')
 
     def plot_render_time(self, ax):
         time_diffs = self._data_view.get().groupby('game_id')['timestamp'].diff()
