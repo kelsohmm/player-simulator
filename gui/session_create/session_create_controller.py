@@ -52,7 +52,7 @@ class SessionCreateController:
             init_session(self.session_path, session_config, conv_configs, dense_configs)
             self.finish()
             self.session_created_callback()
-        except _ as e:
+        except Exception as e:
             show_error(str(e))
 
     def _remap_config_names(self, config, mapping):
