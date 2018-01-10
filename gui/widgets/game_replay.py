@@ -4,7 +4,7 @@ from PIL import Image, ImageTk
 
 
 class GameReplay:
-    SECONDS_PER_FRAME = 1/30
+    SECONDS_PER_FRAME = 0.03333333
 
     def __init__(self, game_frames, width, height):
         self.frames = [ImageTk.PhotoImage(
